@@ -13,17 +13,15 @@ public class Catalog
 
     public ICollection<Catalog> Children { get; set; } = [];
 
-    public ICollection<Blog> Blogs { get; set; } = [];
+    public ICollection<Doc> Docs { get; set; } = [];
 
     public Catalog? Parent { get; set; }
 
-
-
-    public List<Blog> GetAllBlogs()
+    public List<Doc> GetAllBlogs()
     {
-        var blogs = new List<Blog>();
+        var blogs = new List<Doc>();
 
-        blogs.AddRange(Blogs);
+        blogs.AddRange(Docs);
         foreach (var catalog in Children)
         {
             blogs.AddRange(catalog.GetAllBlogs());

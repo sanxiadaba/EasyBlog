@@ -39,7 +39,8 @@ public partial class HtmlBuilder
         if (ExtractWebAssets())
         {
             BuildData();
-            BuildBlogs();
+            BuildHtmls("blogs");
+            BuildHtmls("docs");
             BuildIndex();
         }
         else
@@ -68,9 +69,9 @@ public partial class HtmlBuilder
     /// <summary>
     /// blog html file
     /// </summary>
-    public void BuildBlogs()
+    public void BuildHtmls(string dirName)
     {
-        var blogPath = Path.Combine(ContentPath, "blogs");
+        var blogPath = Path.Combine(ContentPath, dirName);
         // 配置markdown管道
         MarkdownPipeline pipeline = new MarkdownPipelineBuilder()
             .UseAlertBlocks()
@@ -104,7 +105,7 @@ public partial class HtmlBuilder
                 string markdown = File.ReadAllText(file);
 
                 string html = Markdown.ToHtml(markdown, pipeline);
-                string relativePath = file.Replace(blogPath, Path.Combine(Output, "blogs")).Replace(".md", ".html");
+                string relativePath = file.Replace(blogPath, Path.Combine(Output, dirName)).Replace(".md", ".html");
 
                 var title = GetTitleFromMarkdown(markdown);
                 var toc = GetTOC(markdown) ?? "";
@@ -120,19 +121,18 @@ public partial class HtmlBuilder
             }
             catch (Exception e)
             {
-                Console.WriteLine($"❌ parse markdown error: {file}" + e.Message + e.StackTrace);
+                Command.LogError($"parse markdown error: {file}" + e.Message + e.StackTrace);
             }
 
         }
-        Console.WriteLine("✅ generate blog html!");
-
+        Command.LogSuccess("generate  html!");
         string[] extensions = [".jpg", ".png", ".jpeg", ".gif", ".svg"];
         foreach (var file in otherFiles)
         {
             var extension = Path.GetExtension(file);
             if (!extensions.Contains(extension)) { continue; }
 
-            string relativePath = file.Replace(ContentPath, Path.Combine(Output, "blogs"));
+            string relativePath = file.Replace(ContentPath, Path.Combine(Output, dirName));
             string? dir = Path.GetDirectoryName(relativePath);
 
             if (!Directory.Exists(dir))
@@ -142,7 +142,7 @@ public partial class HtmlBuilder
 
             File.Copy(file, relativePath, true);
         }
-        Console.WriteLine("✅ copy blog other files!");
+        Command.LogSuccess("copy other files!");
     }
 
     /// <summary>
@@ -154,25 +154,66 @@ public partial class HtmlBuilder
         {
             Directory.CreateDirectory(DataPath);
         }
-
         var webInfoContent = JsonSerializer.Serialize(WebInfo, _jsonSerializerOptions);
         File.WriteAllText(Path.Combine(DataPath, Command.WebConfigFileName), webInfoContent, Encoding.UTF8);
-
         // 获取git历史信息
         ProcessHelper.RunCommand("git", "fetch --unshallow", out string _);
+        BuildBlogs();
+        BuildDocs();
+    }
 
+    public void BuildBlogs()
+    {
         // create blogs.json
         var rootCatalog = new Catalog { Name = "Root" };
         TraverseDirectory(Path.Combine(ContentPath, "blogs"), rootCatalog);
         string json = JsonSerializer.Serialize(rootCatalog, _jsonSerializerOptions);
 
-        string blogData = Path.Combine(DataPath, "blogs.json");
-        File.WriteAllText(blogData, json, Encoding.UTF8);
-        Console.WriteLine("✅ update blogs.json!");
-
+        string blogDataPath = Path.Combine(DataPath, "blogs.json");
+        File.WriteAllText(blogDataPath, json, Encoding.UTF8);
+        Command.LogSuccess("update blogs.json!");
         // create sitemap.xml
         var blogs = rootCatalog.GetAllBlogs();
         BuildSitemap(blogs);
+    }
+
+    public void BuildDocs()
+    {
+        var docInfos = WebInfo.DocInfos;
+        var docRootPath = Path.Combine(ContentPath, "docs");
+
+        foreach (var docInfo in docInfos)
+        {
+            var docPath = Path.Combine(docRootPath, docInfo.Name);
+            if (!Directory.Exists(docPath))
+            {
+                Command.LogWarning($"{docPath} not exist! skip it.");
+            }
+            // 匹配语言
+            var languageDirs = Directory.GetDirectories(docPath).Select(d => Path.GetFileName(d));
+            var showLanguages = docInfo.Languages;
+            var matchLanguages = languageDirs.Where(d => showLanguages.Contains(Path.GetFileName(d))).ToList();
+            foreach (var language in matchLanguages)
+            {
+                var languagePath = Path.Combine(docPath, language);
+                // 匹配版本
+                var versionDirs = Directory.GetDirectories(languagePath).Select(d => Path.GetFileName(d));
+                var showVersions = docInfo.Versions;
+                var matchVersions = versionDirs.Where(d => showVersions.Contains(Path.GetFileName(d))).ToList();
+
+                // 以{docInfo.Name}-{language}-{version}.json 生成对应语言版本的内容
+                foreach (var version in matchVersions)
+                {
+                    var versionPath = Path.Combine(languagePath, version);
+                    var versionCatalog = new Catalog { Name = $"{docInfo.Name}" };
+                    TraverseDirectory(versionPath, versionCatalog);
+                    string json = JsonSerializer.Serialize(versionCatalog, _jsonSerializerOptions);
+                    string versionDataPath = Path.Combine(DataPath, $"{docInfo.Name}-{language}-{version}.json");
+                    File.WriteAllText(versionDataPath, json, Encoding.UTF8);
+                    Command.LogSuccess($"update {docInfo.Name}-{language}-{version}.json!");
+                }
+            }
+        }
     }
 
     /// <summary>
@@ -198,7 +239,7 @@ public partial class HtmlBuilder
                 .Replace("@{siderbar}", siderBarHtml);
 
             File.WriteAllText(indexPath, indexHtml, Encoding.UTF8);
-            Console.WriteLine("✅ update index.html");
+            Command.LogSuccess("update index.html");
         }
     }
 
@@ -207,7 +248,6 @@ public partial class HtmlBuilder
         foreach (string subDirectoryPath in Directory.GetDirectories(directoryPath))
         {
             var existMd = Directory.GetFiles(subDirectoryPath, "*.md").Length > 0;
-            if (!existMd) { continue; }
             var catalog = new Catalog
             {
                 Name = Path.GetFileName(subDirectoryPath),
@@ -223,7 +263,7 @@ public partial class HtmlBuilder
             var fileName = Path.GetFileName(filePath);
             var gitAddTime = GetCreatedTime(filePath);
             var gitUpdateTime = GetUpdatedTime(filePath);
-            var blog = new Blog
+            var blog = new Doc
             {
                 Title = Path.GetFileNameWithoutExtension(filePath),
                 FileName = fileName,
@@ -236,7 +276,7 @@ public partial class HtmlBuilder
 
             blog.Path = GetFullPath(parentCatalog) + "/" + Uri.EscapeDataString(blog.FileName.Replace(".md", ".html"));
 
-            parentCatalog.Blogs.Add(blog);
+            parentCatalog.Docs.Add(blog);
         }
     }
 
@@ -249,6 +289,7 @@ public partial class HtmlBuilder
         }
         return path.Replace("Root", "");
     }
+
     public void EnableBaseUrl()
     {
         BaseUrl = WebInfo?.BaseHref ?? "/";
@@ -266,6 +307,7 @@ public partial class HtmlBuilder
         var match = regex.Match(content);
         return match.Success ? match.Groups[1].Value.Trim() : "";
     }
+
     private string AddHtmlTags(string content, string title = "", string toc = "")
     {
         string extensionHead = "";
@@ -302,7 +344,7 @@ public partial class HtmlBuilder
     /// <summary>
     /// 创建sitemap.xml
     /// </summary>
-    private void BuildSitemap(List<Blog> blogs)
+    private void BuildSitemap(List<Doc> blogs)
     {
         if (!string.IsNullOrWhiteSpace(WebInfo.Domain) && blogs.Count > 0)
         {
@@ -321,7 +363,7 @@ public partial class HtmlBuilder
             var sitemapXml = Sitemap.GetSitemaps(sitemaps);
             var sitemapPath = Path.Combine(Output, "sitemap.xml");
             File.WriteAllText(sitemapPath, sitemapXml, Encoding.UTF8);
-            Console.WriteLine("✅ update sitemap.xml");
+            Command.LogSuccess("update sitemap.xml");
         }
     }
 
@@ -355,7 +397,7 @@ public partial class HtmlBuilder
     }
 
     /// <summary>
-    /// blog ist html
+    /// blog list html
     /// </summary>
     /// <returns></returns>
     private string GenBlogListHtml(Catalog rootCatalog, WebInfo webInfo)
@@ -385,7 +427,6 @@ public partial class HtmlBuilder
                    </div>
                    """;
             sb.AppendLine(html);
-
         }
         return sb.ToString();
     }
@@ -415,7 +456,7 @@ public partial class HtmlBuilder
         {
             var html = $"""
                 <span data-catalog="{catalog.Name}" class="filter-item text-lg block py-2 text-neutral-600 hover:text-neutral-800 dark:text-neutral-300 dark:hover:text-neutral-100">
-                    {catalog.Name} [{catalog.Blogs.Count}]
+                    {catalog.Name} [{catalog.Docs.Count}]
                 </span>
                 """;
 

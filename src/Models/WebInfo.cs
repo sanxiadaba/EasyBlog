@@ -47,6 +47,13 @@ public class WebInfo
 public class DocInfo
 {
     public required string Name { get; set; }
+
+    /// <summary>
+    /// 包含的语言
+    /// </summary>
+    public string[] Languages { get; set; } = ["en-us"];
+    /// <summary>
+    /// 包含的版本
+    /// </summary>
+    public string[] Versions { get; set; } = ["1.0"];
 }
-
-

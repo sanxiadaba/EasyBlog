@@ -1,8 +1,8 @@
 ﻿namespace Models;
 /// <summary>
-/// 博客
+/// 文档
 /// </summary>
-public class Blog
+public class Doc
 {
     /// <summary>
     /// 标题

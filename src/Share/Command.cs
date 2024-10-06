@@ -69,6 +69,13 @@ public class Command
         Console.WriteLine($"ℹ️ {msg}");
     }
 
+    public static void LogWarning(string msg)
+    {
+        Console.ForegroundColor = ConsoleColor.Yellow;
+        Console.WriteLine($"⚠️ {msg}");
+        Console.ResetColor();
+    }
+
     public static void LogError(string msg)
     {
         Console.ForegroundColor = ConsoleColor.Red;
