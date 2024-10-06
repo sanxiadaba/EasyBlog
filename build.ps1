@@ -1,3 +1,3 @@
 # 生成内容
-dotnet run --project ./src/BuildSite ./Content ./WebApp
+dotnet run --project ./src/BuildSite build ./Content ./WebApp
 

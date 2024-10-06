@@ -201,14 +201,14 @@ public partial class HtmlBuilder
                 var showVersions = docInfo.Versions;
                 var matchVersions = versionDirs.Where(d => showVersions.Contains(Path.GetFileName(d))).ToList();
 
-                // 以{docInfo.Name}-{language}-{version}.json 生成对应语言版本的内容
+                // 以{docInfo.Name}/{language}-{version}.json 生成对应语言版本的内容
                 foreach (var version in matchVersions)
                 {
                     var versionPath = Path.Combine(languagePath, version);
                     var versionCatalog = new Catalog { Name = $"{docInfo.Name}" };
                     TraverseDirectory(versionPath, versionCatalog);
                     string json = JsonSerializer.Serialize(versionCatalog, _jsonSerializerOptions);
-                    string versionDataPath = Path.Combine(DataPath, $"{docInfo.Name}-{language}-{version}.json");
+                    string versionDataPath = Path.Combine(DataPath, docInfo.Name, $"{language}-{version}.json");
                     File.WriteAllText(versionDataPath, json, Encoding.UTF8);
                     Command.LogSuccess($"update {docInfo.Name}-{language}-{version}.json!");
                 }

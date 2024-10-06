@@ -1,14 +1,14 @@
 ﻿{
   "Name": "Root",
   "Children": [],
-  "Blogs": [
+  "Docs": [
     {
-      "Title": "introduction",
-      "Path": "/introduction.html",
-      "FileName": "introduction.md",
-      "PublishTime": "2024-04-07T14:07:45+08:00",
-      "CreatedTime": "2024-03-20T11:51:35+08:00",
-      "UpdatedTime": "2024-04-07T14:07:45+08:00",
+      "Title": "MyBlog",
+      "Path": "/MyBlog.html",
+      "FileName": "MyBlog.md",
+      "PublishTime": "2024-10-06T15:13:26.9019219+08:00",
+      "CreatedTime": "2024-10-06T21:10:59.1740228+08:00",
+      "UpdatedTime": "2024-10-06T15:13:26.9019219+08:00",
       "Catalog": null
     }
   ],
