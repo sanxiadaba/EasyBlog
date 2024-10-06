@@ -5,22 +5,22 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <PackAsTool>true</PackAsTool>
-        <ToolCommandName>ezblog</ToolCommandName>
+        <ToolCommandName>ezdoc</ToolCommandName>
         <PackageOutputPath>./nupkg</PackageOutputPath>
         <AssemblyVersion>8.0.0</AssemblyVersion>
-        <PackageId>Ater.EasyBlog</PackageId>
+        <PackageId>Ater.EasyDocs</PackageId>
         <Version>1.0.0</Version>
-        <Description>The Static Blog Site Generator!</Description>
+        <Description>Fast and lightweight static website generation tool!</Description>
         <Authors>NilTor</Authors>
         <Company>Atersoft</Company>
         <Copyright>Atersoft</Copyright>
-        <SatelliteResourceLanguages>en,zh-cn</SatelliteResourceLanguages>
+        <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <PackageProjectUrl>https://github.com/AterDev/easyblog</PackageProjectUrl>
         <RepositoryType>git</RepositoryType>
         <RepositoryUrl>https://github.com/AterDev/easyblog.git</RepositoryUrl>
         <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
-        <PackageReleaseNotes>Release Command Line Tool</PackageReleaseNotes>
+        <PackageReleaseNotes>Add support for documentation sites</PackageReleaseNotes>
         <PackageIcon>logo.jpg</PackageIcon>
         <ImplicitUsings>enable</ImplicitUsings>
         <AssemblyName>$(MSBuildProjectName)</AssemblyName>
@@ -32,18 +32,18 @@
         <SatelliteResourceLanguages>None</SatelliteResourceLanguages>
     </PropertyGroup>
     <ItemGroup>
-      <ProjectReference Include="..\Share\Share.csproj" />
+        <ProjectReference Include="..\Share\Share.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <None Update="logo.jpg">
-        <Pack>True</Pack>
-        <PackagePath>\</PackagePath>
-      </None>
-      <None Update="README.md">
-        <Pack>True</Pack>
-        <PackagePath>\</PackagePath>
-      </None>
+        <None Update="logo.jpg">
+            <Pack>True</Pack>
+            <PackagePath>\</PackagePath>
+        </None>
+        <None Update="README.md">
+            <Pack>True</Pack>
+            <PackagePath>\</PackagePath>
+        </None>
     </ItemGroup>
 
 </Project>

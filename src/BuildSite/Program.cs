@@ -1,6 +1,4 @@
 ﻿using Share;
-using Spectre.Console;
-
 
 ShowLogo();
 string? command = args.FirstOrDefault();
@@ -11,7 +9,6 @@ switch (command)
         var path = args.Skip(1).FirstOrDefault() ?? Directory.GetCurrentDirectory();
         Command.Init(path);
         break;
-
     case "build":
         var contentPath = args.Skip(1).FirstOrDefault();
         var outputPath = args.Skip(2).FirstOrDefault();
@@ -33,18 +30,20 @@ switch (command)
 static void ShowHelp()
 {
     var helpContent = """
-
     {0}:
-    easyblog init [path]
+    init [path]
         {1}
 
-    easyblog build [contentPath] [outputPath]
+    build [contentPath] [outputPath]
         {2}
+
+    doc [configPath]
     """;
-    AnsiConsole.Write(helpContent,
+    Console.Write(helpContent,
         Language.Get("Command"),
         Language.Get("init"),
-        Language.Get("build")
+        Language.Get("build"),
+        Language.Get("doc")
         );
 }
 static void ShowLogo()

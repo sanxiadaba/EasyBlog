@@ -58,7 +58,7 @@ public partial class HtmlBuilder
         {
             return false;
         }
-        using (ZipArchive archive = new ZipArchive(stream, ZipArchiveMode.Read))
+        using (ZipArchive archive = new(stream, ZipArchiveMode.Read))
         {
             archive.ExtractToDirectory(Output, true);
         }
@@ -70,6 +70,7 @@ public partial class HtmlBuilder
     /// </summary>
     public void BuildBlogs()
     {
+        var blogPath = Path.Combine(ContentPath, "blogs");
         // 配置markdown管道
         MarkdownPipeline pipeline = new MarkdownPipelineBuilder()
             .UseAlertBlocks()
@@ -89,10 +90,10 @@ public partial class HtmlBuilder
             .Build();
 
         // 读取所有要处理的md文件
-        List<string> files = Directory.EnumerateFiles(ContentPath, "*.md", SearchOption.AllDirectories)
+        List<string> files = Directory.EnumerateFiles(blogPath, "*.md", SearchOption.AllDirectories)
             .ToList();
         // 复制其他非md文件
-        List<string> otherFiles = Directory.EnumerateFiles(ContentPath, "*", SearchOption.AllDirectories)
+        List<string> otherFiles = Directory.EnumerateFiles(blogPath, "*", SearchOption.AllDirectories)
             .Where(f => !f.EndsWith(".md"))
             .ToList();
 
@@ -103,7 +104,7 @@ public partial class HtmlBuilder
                 string markdown = File.ReadAllText(file);
 
                 string html = Markdown.ToHtml(markdown, pipeline);
-                string relativePath = file.Replace(ContentPath, Path.Combine(Output, "blogs")).Replace(".md", ".html");
+                string relativePath = file.Replace(blogPath, Path.Combine(Output, "blogs")).Replace(".md", ".html");
 
                 var title = GetTitleFromMarkdown(markdown);
                 var toc = GetTOC(markdown) ?? "";
@@ -155,14 +156,14 @@ public partial class HtmlBuilder
         }
 
         var webInfoContent = JsonSerializer.Serialize(WebInfo, _jsonSerializerOptions);
-        File.WriteAllText(Path.Combine(DataPath, "webinfo.json"), webInfoContent, Encoding.UTF8);
+        File.WriteAllText(Path.Combine(DataPath, Command.WebConfigFileName), webInfoContent, Encoding.UTF8);
 
         // 获取git历史信息
         ProcessHelper.RunCommand("git", "fetch --unshallow", out string _);
 
         // create blogs.json
         var rootCatalog = new Catalog { Name = "Root" };
-        TraverseDirectory(ContentPath, rootCatalog);
+        TraverseDirectory(Path.Combine(ContentPath, "blogs"), rootCatalog);
         string json = JsonSerializer.Serialize(rootCatalog, _jsonSerializerOptions);
 
         string blogData = Path.Combine(DataPath, "blogs.json");
@@ -263,11 +264,7 @@ public partial class HtmlBuilder
         // 使用正则表达式匹配标题
         var regex = TitleRegex();
         var match = regex.Match(content);
-        if (match.Success)
-        {
-            return match.Groups[1].Value.Trim();
-        }
-        return "";
+        return match.Success ? match.Groups[1].Value.Trim() : "";
     }
     private string AddHtmlTags(string content, string title = "", string toc = "")
     {
@@ -343,20 +340,18 @@ public partial class HtmlBuilder
 
     private static DateTimeOffset? GetUpdatedTime(string path)
     {
-        if (ProcessHelper.RunCommand("git", @$"log -n 1 --format=%aI -- ""{path}""", out string output))
-        {
-            return ConvertToDateTimeOffset(output);
-        }
-        return null;
+        return ProcessHelper.RunCommand("git", @$"log -n 1 --format=%aI -- ""{path}""", out string output)
+            ? ConvertToDateTimeOffset(output)
+            : null;
     }
 
     private static DateTimeOffset? ConvertToDateTimeOffset(string output)
     {
         var dateString = output.Trim();
         string format = "yyyy-MM-ddTHH:mm:sszzz"; // 定义日期时间格式
-        if (DateTimeOffset.TryParseExact(dateString, format, null, System.Globalization.DateTimeStyles.None, out var result)) { return result; }
-
-        return null;
+        return DateTimeOffset.TryParseExact(dateString, format, null, System.Globalization.DateTimeStyles.None, out var result)
+            ? result
+            : null;
     }
 
     /// <summary>

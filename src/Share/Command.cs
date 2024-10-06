@@ -1,27 +1,54 @@
 ﻿namespace Share;
 public class Command
 {
+    public const string WebConfigFileName = "webinfo.json";
+    public const string DocConfigFileName = "docConfig.json";
+    public readonly static JsonSerializerOptions JsonSerializerOptions = new()
+    {
+        WriteIndented = true
+    };
+
     public static void Init(string path)
     {
         if (!Directory.Exists(path))
         {
             Directory.CreateDirectory(path);
         }
-        var filePath = Path.Combine(path, "webinfo.json");
-
+        var filePath = Path.Combine(path, WebConfigFileName);
+        var webInfo = new WebInfo
+        {
+            DocInfos = [new() { Name = "example" }]
+        };
         if (!File.Exists(filePath))
         {
-            var webInfo = new WebInfo();
-            var json = JsonSerializer.Serialize(webInfo, new JsonSerializerOptions { WriteIndented = true });
+            var json = JsonSerializer.Serialize(webInfo, JsonSerializerOptions);
             File.WriteAllText(filePath, json);
-
+            LogSuccess(Language.Get("initSuccess") + filePath);
         }
-        LogSuccess(Language.Get("initSuccess") + "➡️" + filePath);
+        else
+        {
+            Console.WriteLine("config file already exist!");
+        }
+        // 创建目录
+        string[] dirs = ["blogs", "docs/example/zh-cn/1.0", "docs/example/en-us/1.0"];
+        foreach (var dir in dirs)
+        {
+            var dirPath = Path.Combine(path, "Content", dir);
+            if (!Directory.Exists(dirPath))
+            {
+                Directory.CreateDirectory(dirPath);
+            }
+        }
+        var aboutMeFile = Path.Combine(path, "Content", "ABOUTME.md");
+        if (!File.Exists(aboutMeFile))
+        {
+            File.WriteAllText(aboutMeFile, "# About Me");
+        }
     }
 
     public static void Build(string contentPath, string outputPath)
     {
-        var webInfoPath = Path.Combine("./webinfo.json");
+        var webInfoPath = Path.Combine(WebConfigFileName);
         var webInfo = new WebInfo();
         if (File.Exists(webInfoPath))
         {
@@ -39,15 +66,19 @@ public class Command
 
     public static void LogInfo(string msg)
     {
-        AnsiConsole.MarkupLine($"ℹ️ {msg}");
+        Console.WriteLine($"ℹ️ {msg}");
     }
 
     public static void LogError(string msg)
     {
-        AnsiConsole.MarkupLine($"❌ [red]{msg}[/]");
+        Console.ForegroundColor = ConsoleColor.Red;
+        Console.WriteLine($"❌ {msg}");
+        Console.ResetColor();
     }
     public static void LogSuccess(string msg)
     {
-        AnsiConsole.MarkupLine($"✅ [green]{msg}[/]");
+        Console.ForegroundColor = ConsoleColor.Green;
+        Console.WriteLine($"✅ {msg}");
+        Console.ResetColor();
     }
 }
