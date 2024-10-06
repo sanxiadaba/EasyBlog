@@ -15,15 +15,20 @@
 
 <body class="dark:bg-neutral-900">
     <div class="text-white py-4 bg-gray-600 dark:bg-neutral-800">
-    <div class="container mx-auto flex items-center justify-between">
-        <a href="@{BaseUrl}" class="text-2xl font-semibold hidden sm:block">@{Name}</a>
-        <span class="hidden sm:block">@{Description}</span>
-        <div class="flex items-center">
-        <input id="searchText" placeholder="博客标题" class="px-4 py-2 border border-gray-600 rounded-lg dark:bg-neutral-800 text-black dark:text-white focus:outline-none" />
+    <div class="container mx-auto flex items-center space-x-4">
+      <div class="flex-none">
+        <a href="/" class="text-2xl font-semibold hidden sm:block">EasyBlog</a>
+      </div>
+      <div class="flex-grow text-left flex space-x-4">
+         @{navigations}
+      </div>
+      <div class="flex-none flex items-center">
+        <input id="searchText" placeholder="博客标题"
+          class="px-4 py-2 border border-gray-600 rounded-lg dark:bg-neutral-800 text-black dark:text-white focus:outline-none" />
         <button id="searchBtn" class="ml-2 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg">
-            搜索
+          搜索
         </button>
-        </div>
+      </div>
     </div>
     </div>
 

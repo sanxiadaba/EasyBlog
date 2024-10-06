@@ -208,8 +208,13 @@ public partial class HtmlBuilder
                     var versionCatalog = new Catalog { Name = $"{docInfo.Name}" };
                     TraverseDirectory(versionPath, versionCatalog);
                     string json = JsonSerializer.Serialize(versionCatalog, _jsonSerializerOptions);
-                    string versionDataPath = Path.Combine(DataPath, docInfo.Name, $"{language}-{version}.json");
-                    File.WriteAllText(versionDataPath, json, Encoding.UTF8);
+                    string versionDataPath = Path.Combine(DataPath, docInfo.Name);
+                    if (!Directory.Exists(versionDataPath))
+                    {
+                        Directory.CreateDirectory(versionDataPath);
+                    }
+                    var docFilePath = Path.Combine(versionDataPath, $"{language}-{version}.json");
+                    File.WriteAllText(docFilePath, json, Encoding.UTF8);
                     Command.LogSuccess($"update {docInfo.Name}-{language}-{version}.json!");
                 }
             }
@@ -226,21 +231,42 @@ public partial class HtmlBuilder
         var blogData = Path.Combine(DataPath, "blogs.json");
         var blogContent = File.ReadAllText(blogData);
         var rootCatalog = JsonSerializer.Deserialize<Catalog>(blogContent);
-
         if (rootCatalog != null && WebInfo != null)
         {
+            var navigations = BuildNavigations();
             var blogHtml = GenBlogListHtml(rootCatalog, WebInfo);
             var siderBarHtml = GenSiderBar(rootCatalog);
 
             indexHtml = indexHtml.Replace("@{Name}", WebInfo.Name)
+                .Replace("@{navigations}", navigations)
                 .Replace("@{BaseUrl}", BaseUrl)
-                .Replace("@{Description}", WebInfo.Description)
                 .Replace("@{blogList}", blogHtml)
                 .Replace("@{siderbar}", siderBarHtml);
 
             File.WriteAllText(indexPath, indexHtml, Encoding.UTF8);
             Command.LogSuccess("update index.html");
         }
+    }
+
+    private string BuildNavigations()
+    {
+        var hasDocs = WebInfo.DocInfos.Count > 0;
+        var hasBlog = Directory.Exists(Path.Combine(ContentPath, "blogs"));
+        var hasAbout = File.Exists(Path.Combine(ContentPath, "ABOUTME.md"));
+        var navigations = new StringBuilder();
+        if (hasBlog)
+        {
+            navigations.AppendLine("<a href=\"/blogs.html\" class=\"block py-2 text-lg text-neutral-600 hover:text-neutral-800 dark:text-neutral-300 dark:hover:text-neutral-100\">📑 Blogs</a>");
+        }
+        if (hasDocs)
+        {
+            navigations.AppendLine("<a href=\"/docs.html\" class=\"block py-2 text-lg text-neutral-600 hover:text-neutral-800 dark:text-neutral-300 dark:hover:text-neutral-100\">📚 Docs</a>");
+        }
+        if (hasAbout)
+        {
+            navigations.AppendLine("<a href=\"/ABOUTME.html\" class=\"block py-2 text-lg text-neutral-600 hover:text-neutral-800 dark:text-neutral-300 dark:hover:text-neutral-100\">👨‍💻 About</a>");
+        }
+        return navigations.ToString();
     }
 
     private void TraverseDirectory(string directoryPath, Catalog parentCatalog)
@@ -339,7 +365,6 @@ public partial class HtmlBuilder
             .Replace("@{content}", content);
         return tplContent;
     }
-
 
     /// <summary>
     /// 创建sitemap.xml

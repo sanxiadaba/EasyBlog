@@ -1,5 +1,6 @@
 ﻿<!DOCTYPE html>
 <html>
+
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -15,10 +16,22 @@
 
 <body class="dark:bg-neutral-900">
   <div class="text-white py-4 bg-gray-600 dark:bg-neutral-800">
-    <div class="container mx-auto flex items-center justify-between">
-      <a href="/" class="text-2xl font-semibold hidden sm:block">EasyBlog</a>
-      <span class="hidden sm:block">🗽to be a human</span>
-      <div class="flex items-center">
+    <div class="container mx-auto flex items-center space-x-4">
+      <!-- 左列 -->
+      <div class="flex-none">
+        <a href="/" class="text-2xl font-semibold hidden sm:block">EasyBlog</a>
+      </div>
+      <!-- 中间列 -->
+      <div class="flex-grow text-left flex space-x-4">
+        <a href="/blogs.html"
+          class="block py-2 text-lg text-neutral-600 hover:text-neutral-800 dark:text-neutral-300 dark:hover:text-neutral-100">Blog</a>
+        <a href="/docs.html"
+          class="block py-2 text-lg text-neutral-600 hover:text-neutral-800 dark:text-neutral-300 dark:hover:text-neutral-100">Doc</a>
+        <a href="/ABOUTME.html"
+          class="block py-2 text-lg text-neutral-600 hover:text-neutral-800 dark:text-neutral-300 dark:hover:text-neutral-100">About</a>
+      </div>
+      <!-- 右列 -->
+      <div class="flex-none flex items-center">
         <input id="searchText" placeholder="博客标题"
           class="px-4 py-2 border border-gray-600 rounded-lg dark:bg-neutral-800 text-black dark:text-white focus:outline-none" />
         <button id="searchBtn" class="ml-2 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg">
@@ -44,7 +57,7 @@
               <p class="text-neutral-700 text-base dark:text-neutral-300">
                 👨‍💻 NilTor
                 &nbsp;&nbsp;
-                ⏱️ <span class="publish-time" data-time="2024-10-06T15:13:26+08:00"></span>
+                ⏱️ <span class="publish-time" data-time="2024-10-06T22:36:40+08:00"></span>
               </p>
             </div>
           </div>
@@ -81,8 +94,7 @@
     <div class="container mx-auto text-center">
       <p class="text-neutral-600 dark:text-neutral-300">
         EasyBlog
-        <a class="text-blue-600" target="_blank" href="https://github.com/AterDev/EasyBlog">Powered by Ater
-          Blog</a>
+        <a class="text-blue-600" target="_blank" href="https://github.com/AterDev/EasyBlog">Powered by Ater Blog</a>
       </p>
     </div>
   </div>

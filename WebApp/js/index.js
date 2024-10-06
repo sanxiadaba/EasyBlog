@@ -68,7 +68,7 @@ class Index {
         if (catalogName != 'all') {
             let catalog = this.catalogs.find(catalog => catalog.Name == catalogName);
             if (catalog) {
-                this.blogs = catalog.Docs;
+                this.blogs = catalog.Blogs;
             }
         }
         else if (date != 'all') {
@@ -79,10 +79,9 @@ class Index {
         }
         this.renderBlogs();
     }
-
     getAllBlogs(rootCatalog) {
         let blogs = [];
-        blogs.push(...rootCatalog.Docs);
+        blogs.push(...rootCatalog.Blogs);
         if (rootCatalog.Children && rootCatalog.Children.length > 0) {
             rootCatalog.Children.forEach(catalog => {
                 blogs.push(...this.getAllBlogs(catalog));
