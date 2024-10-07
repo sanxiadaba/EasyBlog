@@ -1,4 +1,3 @@
-
 const BaseUrl = baseUrl;
 class Index {
     blogs = [];
@@ -28,6 +27,21 @@ class Index {
     }
     addEvent() {
         const self = this;
+        // const menuButton = document.getElementById('menu-button');
+        // const menu = document.getElementById('menu');
+
+        // menuButton.addEventListener('click', function () {
+        //     const isExpanded = menuButton.getAttribute('aria-expanded') === 'true';
+        //     menuButton.setAttribute('aria-expanded', !isExpanded);
+        //     menu.classList.toggle('hidden');
+        // });
+
+        // document.addEventListener('click', function (event) {
+        //     if (!menuButton.contains(event.target) && !menu.contains(event.target)) {
+        //         menuButton.setAttribute('aria-expanded', 'false');
+        //         menu.classList.add('hidden');
+        //     }
+        // });
     }
     getAllBlogs(rootCatalog) {
         let blogs = [];
