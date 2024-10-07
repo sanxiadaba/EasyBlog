@@ -15,6 +15,15 @@
         "1.0",
         "2.0"
       ]
+    },
+    {
+      "Name": "EasyDoc",
+      "Languages": [
+        "zh-cn"
+      ],
+      "Versions": [
+        "1.0"
+      ]
     }
   ]
 }

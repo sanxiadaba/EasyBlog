@@ -14,7 +14,7 @@
 </head>
 
 <body class="dark:bg-neutral-900">
-    <div class="text-white py-4 bg-gray-600 dark:bg-neutral-800">
+    <div class="text-white py-2 bg-gray-600 dark:bg-neutral-800">
     <div class="container mx-auto flex items-center space-x-4">
       <div class="flex-none">
         <a href="/" class="text-2xl font-semibold hidden sm:block">EasyBlog</a>

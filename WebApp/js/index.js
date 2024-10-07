@@ -1,3 +1,4 @@
+
 const BaseUrl = baseUrl;
 class Index {
     blogs = [];
@@ -14,108 +15,29 @@ class Index {
     getData() {
         fetch(BaseUrl + 'data/blogs.json')
             .then(res => res.json()).then((data) => {
-            this.allBlogs = this.getAllBlogs(data).sort((a, b) => {
-                return new Date(b.PublishTime).getTime() - new Date(a.PublishTime).getTime();
+                this.allBlogs = this.getAllBlogs(data).sort((a, b) => {
+                    return new Date(b.PublishTime).getTime() - new Date(a.PublishTime).getTime();
+                });
+                this.blogs = this.allBlogs.slice(0, 50);
+                this.catalogs = data.Children;
             });
-            this.blogs = this.allBlogs.slice(0, 50);
-            this.catalogs = data.Children;
-        });
         fetch(BaseUrl + 'data/webinfo.json')
             .then(res => res.json()).then((data) => {
-            this.webInfo = data;
-        });
+                this.webInfo = data;
+            });
     }
     addEvent() {
         const self = this;
-        document.getElementById('searchBtn').addEventListener('click', function () {
-            var searchText = document.getElementById('searchText').value;
-            self.search(searchText);
-        });
-        document.getElementById('searchText').addEventListener('keydown', function (e) {
-            if (e.key === 'Enter') {
-                var searchText = document.getElementById('searchText').value;
-                self.search(searchText);
-            }
-        });
-        document.getElementById("catalog-list").addEventListener('click', function (e) {
-            if (e.target.classList.contains('filter-item')) {
-                let catalogName = e.target.dataset.catalog ?? '';
-                self.filterBlogs(catalogName, 'all');
-            }
-        });
-        document.getElementById("date-list").addEventListener('click', function (e) {
-            if (e.target.classList.contains('filter-item')) {
-                let date = e.target.dataset.date ?? '';
-                self.filterBlogs('all', date);
-            }
-        });
-        var dates = document.querySelectorAll('.publish-time');
-        dates.forEach((date) => {
-            const dateTime = date.dataset.time;
-            date.innerText = self.timeAgo(new Date(dateTime));
-        });
-    }
-    search(key) {
-        if (!key) {
-            this.blogs = this.allBlogs.slice(0, 50);
-        }
-        else {
-            this.blogs = this.allBlogs.filter(blog => blog.Title.toLowerCase().includes(key));
-        }
-        this.renderBlogs();
-    }
-    filterBlogs(catalogName, date) {
-        if (catalogName != 'all') {
-            let catalog = this.catalogs.find(catalog => catalog.Name == catalogName);
-            if (catalog) {
-                this.blogs = catalog.Blogs;
-            }
-        }
-        else if (date != 'all') {
-            this.blogs = this.allBlogs.filter(blog => blog.PublishTime.substr(0, 7) == date);
-        }
-        else {
-            this.blogs = this.allBlogs.slice(0, 50);
-        }
-        this.renderBlogs();
     }
     getAllBlogs(rootCatalog) {
         let blogs = [];
-        blogs.push(...rootCatalog.Blogs);
+        blogs.push(...rootCatalog.Docs);
         if (rootCatalog.Children && rootCatalog.Children.length > 0) {
             rootCatalog.Children.forEach(catalog => {
                 blogs.push(...this.getAllBlogs(catalog));
             });
         }
         return blogs;
-    }
-    renderBlogs() {
-        let blogList = document.getElementById('blogList');
-        if (blogList) {
-            const pathName = window.location.pathname;
-            blogList.innerHTML = '';
-            this.blogs.forEach(blog => {
-                let blogDiv = document.createElement('div');
-                blogDiv.className = 'w-100 rounded overflow-hidden shadow-lg dark:bg-neutral-800 my-2';
-                let blogInnerDiv = document.createElement('div');
-                blogInnerDiv.className = 'px-6 py-3';
-                let blogTitleDiv = document.createElement('div');
-                blogTitleDiv.className = 'font-bold text-xl mb-2';
-                let blogLink = document.createElement('a');
-                blogLink.href = pathName + 'blogs' + blog.Path;
-                blogLink.target = '_blank';
-                blogLink.className = 'block text-lg py-2 text-neutral-600 hover:text-neutral-800 dark:text-neutral-300 dark:hover:text-neutral-100';
-                blogLink.innerText = "📑 " + blog.Title;
-                blogTitleDiv.appendChild(blogLink);
-                blogInnerDiv.appendChild(blogTitleDiv);
-                let blogInfoP = document.createElement('p');
-                blogInfoP.className = 'text-neutral-700 text-base dark:text-neutral-300';
-                blogInfoP.innerHTML = `👨‍💻 ${this.webInfo.AuthorName} &nbsp;&nbsp; ⏱️ ${this.timeAgo(new Date(blog.PublishTime))}`;
-                blogInnerDiv.appendChild(blogInfoP);
-                blogDiv.appendChild(blogInnerDiv);
-                blogList?.appendChild(blogDiv);
-            });
-        }
     }
     timeAgo(date) {
         const seconds = Math.floor((new Date().getTime() - date.getTime()) / 1000);
