@@ -16,9 +16,7 @@
         @{content}
         </div>
         <div class="w-1/4 mt-1 hidden sm:flex">
-            <div class="toc-block sticky top-2">
-                @{toc}
-            </div>
+            @{toc}
         </div>
     </div>
 </body>

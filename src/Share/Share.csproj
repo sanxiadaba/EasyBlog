@@ -6,13 +6,17 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <None Remove="template\blog.html.tpl" />
+        <None Remove="template\blogs.html.tpl" />
+        <None Remove="template\docContent.html.tpl" />
+        <None Remove="template\docs.html.tpl" />
         <None Remove="template\index.html.tpl" />
         <None Remove="template\web.zip" />
     </ItemGroup>
 
     <ItemGroup>
-        <EmbeddedResource Include="template\blog.html.tpl" />
+        <EmbeddedResource Include="template\docs.html.tpl" />
+        <EmbeddedResource Include="template\docContent.html.tpl" />
+        <EmbeddedResource Include="template\blogs.html.tpl" />
         <EmbeddedResource Include="template\index.html.tpl" />
         <EmbeddedResource Include="template\web.zip" />
     </ItemGroup>

@@ -654,12 +654,24 @@ video {
   flex: none;
 }
 
+.flex-1 {
+  flex: 1 1 0%;
+}
+
 .flex-grow {
   flex-grow: 1;
 }
 
+.flex-col {
+  flex-direction: column;
+}
+
 .items-center {
   align-items: center;
+}
+
+.justify-between {
+  justify-content: space-between;
 }
 
 .space-x-4 > :not([hidden]) ~ :not([hidden]) {
@@ -1191,6 +1203,10 @@ video {
 
   .sm\:pr-4 {
     padding-right: 1rem;
+  }
+
+  .sm\:pr-1 {
+    padding-right: 0.25rem;
   }
 }
 

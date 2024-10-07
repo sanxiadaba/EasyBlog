@@ -3,14 +3,14 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@{Name}</title>
+    <title>@{Name}-Blog</title>
     <meta name="description" content="@{Description}" />
     <base href="/" />
     <link rel="stylesheet" href="@{BaseUrl}css/app.css" />
     <link rel="stylesheet" href="@{BaseUrl}css/markdown.css" />
     <link rel="icon" type="image/png" href="@{BaseUrl}favicon.ico" />
     <script>const baseUrl = '@{BaseUrl}';</script>
-    <script src="@{BaseUrl}js/index.js"></script>
+    <script src="@{BaseUrl}js/blogs.js"></script>
 </head>
 
 <body class="dark:bg-neutral-900">
@@ -23,12 +23,29 @@
          @{navigations}
       </div>
       <div class="flex-none flex items-center">
+        <input id="searchText" placeholder="博客标题"
+          class="px-4 py-2 border border-gray-600 rounded-lg dark:bg-neutral-800 text-black dark:text-white focus:outline-none" />
+        <button id="searchBtn" class="ml-2 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg">
+          搜索
+        </button>
       </div>
     </div>
     </div>
 
-    <div class="container mx-auto mt-2" id="index-content">
+    <div class="container mx-auto mt-2">
+    <div class="flex">
+        <div class="sm:w-3/4 sm:pr-4 w-full">
+        <!-- 博客卡片列表 -->
+        <div class="px-3 bg-white dark:bg-neutral-900" id="blogList">
+            <!-- 博客卡片内容 -->
+            @{blogList}
+        </div>
+    </div>
 
+    <div class="w-1/4 mt-1 hidden sm:block">
+        <!-- 分类 -->
+        @{siderbar}
+    </div>
     </div>
     </div>
 

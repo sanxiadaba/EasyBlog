@@ -41,8 +41,10 @@ public partial class HtmlBuilder
             BuildData();
             BuildHtmls("blogs");
             BuildHtmls("docs");
-            BuildIndex();
+            BuildIndexHtml();
             BuildAboutMe();
+            BuildBlogHtml();
+            BuildDocHtml();
         }
         else
         {
@@ -68,7 +70,7 @@ public partial class HtmlBuilder
     }
 
     /// <summary>
-    /// blog html file
+    ///  html file
     /// </summary>
     private void BuildHtmls(string dirName)
     {
@@ -99,7 +101,7 @@ public partial class HtmlBuilder
             string relativePath = dirPath.Replace(dirPath, Path.Combine(Output, dirName)).Replace(".md", ".html");
 
             var title = GetTitleFromMarkdown(markdown);
-            var toc = GetTOC(markdown) ?? "";
+            var toc = GetContentTOC(markdown) ?? "";
             html = AddHtmlTags(html, title, toc);
             string? dir = Path.GetDirectoryName(relativePath);
 
@@ -126,7 +128,7 @@ public partial class HtmlBuilder
                     string relativePath = file.Replace(dirPath, Path.Combine(Output, dirName)).Replace(".md", ".html");
 
                     var title = GetTitleFromMarkdown(markdown);
-                    var toc = GetTOC(markdown) ?? "";
+                    var toc = GetContentTOC(markdown) ?? "";
                     html = AddHtmlTags(html, title, toc);
                     string? dir = Path.GetDirectoryName(relativePath);
 
@@ -251,12 +253,36 @@ public partial class HtmlBuilder
     }
 
     /// <summary>
-    /// 构建 index.html
+    /// TODO:构建 index.html
     /// </summary>
-    public void BuildIndex()
+    public void BuildIndexHtml()
     {
         var indexPath = Path.Combine(Output, "index.html");
         var indexHtml = TemplateHelper.GetTplContent("index.html");
+        var blogData = Path.Combine(DataPath, "blogs.json");
+        var blogContent = File.ReadAllText(blogData);
+        var rootCatalog = JsonSerializer.Deserialize<Catalog>(blogContent);
+        if (rootCatalog != null && WebInfo != null)
+        {
+            var navigations = BuildNavigations();
+            var blogHtml = GenBlogListHtml(rootCatalog, WebInfo);
+            // TODO: 生成最新的博客列表以及 文档列表(如果有)
+            indexHtml = indexHtml.Replace("@{Name}", WebInfo.Name)
+                .Replace("@{navigations}", navigations)
+                .Replace("@{BaseUrl}", BaseUrl);
+
+            File.WriteAllText(indexPath, indexHtml, Encoding.UTF8);
+            Command.LogSuccess("update index.html");
+        }
+    }
+
+    /// <summary>
+    /// 构建blogs.html
+    /// </summary>
+    public void BuildBlogHtml()
+    {
+        var indexPath = Path.Combine(Output, "blogs.html");
+        var indexHtml = TemplateHelper.GetTplContent("blogs.html");
         var blogData = Path.Combine(DataPath, "blogs.json");
         var blogContent = File.ReadAllText(blogData);
         var rootCatalog = JsonSerializer.Deserialize<Catalog>(blogContent);
@@ -273,7 +299,34 @@ public partial class HtmlBuilder
                 .Replace("@{siderbar}", siderBarHtml);
 
             File.WriteAllText(indexPath, indexHtml, Encoding.UTF8);
-            Command.LogSuccess("update index.html");
+            Command.LogSuccess("update blogs.html");
+        }
+    }
+
+    /// <summary>
+    /// TODO:构建docs.html
+    /// </summary>
+    public void BuildDocHtml()
+    {
+        var indexPath = Path.Combine(Output, "docs.html");
+        var indexHtml = TemplateHelper.GetTplContent("docs.html");
+
+        var blogData = Path.Combine(DataPath, "blogs.json");
+
+        var blogContent = File.ReadAllText(blogData);
+        var rootCatalog = JsonSerializer.Deserialize<Catalog>(blogContent);
+        if (rootCatalog != null && WebInfo != null)
+        {
+            var navigations = BuildNavigations();
+            var docTocs = GenBlogListHtml(rootCatalog, WebInfo);
+
+            // TODO:生成文档列表
+            indexHtml = indexHtml.Replace("@{Name}", WebInfo.Name)
+                .Replace("@{navigations}", navigations)
+                .Replace("@{BaseUrl}", BaseUrl);
+
+            File.WriteAllText(indexPath, indexHtml, Encoding.UTF8);
+            Command.LogSuccess("update docs.html");
         }
     }
 
@@ -386,7 +439,7 @@ public partial class HtmlBuilder
                 """;
         }
 
-        var tplContent = TemplateHelper.GetTplContent("blog.html");
+        var tplContent = TemplateHelper.GetTplContent("docContent.html");
         tplContent = tplContent.Replace("@{Title}", title)
             .Replace("@{BaseUrl}", BaseUrl)
             .Replace("@{ExtensionHead}", extensionHead)
@@ -539,7 +592,13 @@ public partial class HtmlBuilder
 
         return sb.ToString();
     }
-    private string? GetTOC(string markdown)
+
+    /// <summary>
+    /// 内容页TOC
+    /// </summary>
+    /// <param name="markdown"></param>
+    /// <returns></returns>
+    private string? GetContentTOC(string markdown)
     {
         markdown = Regex.Replace(markdown, @"```.*?```", "", RegexOptions.Singleline);
         markdown = Regex.Replace(markdown, @"`.*?`", "", RegexOptions.Singleline);
@@ -550,6 +609,7 @@ public partial class HtmlBuilder
         if (matches.Count > 0)
         {
             var tocBuilder = new StringBuilder();
+            tocBuilder.AppendLine("<div class=\"toc-block sticky top-2\">");
             tocBuilder.AppendLine(" <p class=\"text-lg\">导航</p>");
             tocBuilder.AppendLine(@"<ul class=""toc"">");
 
@@ -560,6 +620,7 @@ public partial class HtmlBuilder
                 tocBuilder.AppendLine($"  <li><a href='#{headingId}'>{headingText}</a></li>");
             }
             tocBuilder.AppendLine("</ul>");
+            tocBuilder.AppendLine("</div>");
             return tocBuilder.ToString();
         }
         return null;

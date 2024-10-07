@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="@{BaseUrl}css/markdown.css" />
     <link rel="icon" type="image/png" href="@{BaseUrl}favicon.ico" />
     <script>const baseUrl = '@{BaseUrl}';</script>
-    <script src="@{BaseUrl}js/index.js"></script>
+    <script src="@{BaseUrl}js/docs.js"></script>
 </head>
 
 <body class="dark:bg-neutral-900">
@@ -23,12 +23,29 @@
          @{navigations}
       </div>
       <div class="flex-none flex items-center">
+        <input id="searchText" placeholder="搜索文档"
+          class="px-4 py-2 border border-gray-600 rounded-lg dark:bg-neutral-800 text-black dark:text-white focus:outline-none" />
+        <button id="searchBtn" class="ml-2 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg">
+          搜索
+        </button>
       </div>
     </div>
     </div>
 
-    <div class="container mx-auto mt-2" id="index-content">
-
+    <div class="container mx-auto mt-2">
+    <div class="flex">
+        <div class="w-1/4 mt-1 hidden sm:block">
+            @{docToc}
+        </div>
+        <div class="sm:w-3/4 sm:pr-4 w-full">
+            <iframe frameborder="0" id="myIframe" width="100%" height="1000px"></iframe>
+            <script>
+              var iframe = document.getElementById('myIframe');
+              iframe.onload = function () {
+                iframe.style.height = iframe.contentWindow.document.body.scrollHeight + 20 + 'px';
+              };
+            </script>
+        </div>
     </div>
     </div>
 
