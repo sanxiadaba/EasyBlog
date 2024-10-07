@@ -39,7 +39,7 @@ public class Command
                 Directory.CreateDirectory(dirPath);
             }
         }
-        var aboutMeFile = Path.Combine(path, "Content", "ABOUTME.md");
+        var aboutMeFile = Path.Combine(path, "Content", "about.md");
         if (!File.Exists(aboutMeFile))
         {
             File.WriteAllText(aboutMeFile, "# About Me");

@@ -42,6 +42,7 @@ public partial class HtmlBuilder
             BuildHtmls("blogs");
             BuildHtmls("docs");
             BuildIndex();
+            BuildAboutMe();
         }
         else
         {
@@ -69,9 +70,9 @@ public partial class HtmlBuilder
     /// <summary>
     /// blog html file
     /// </summary>
-    public void BuildHtmls(string dirName)
+    private void BuildHtmls(string dirName)
     {
-        var blogPath = Path.Combine(ContentPath, dirName);
+        var dirPath = Path.Combine(ContentPath, dirName);
         // 配置markdown管道
         MarkdownPipeline pipeline = new MarkdownPipelineBuilder()
             .UseAlertBlocks()
@@ -90,26 +91,66 @@ public partial class HtmlBuilder
             .UseBetterCodeBlock()
             .Build();
 
-        // 读取所有要处理的md文件
-        List<string> files = Directory.EnumerateFiles(blogPath, "*.md", SearchOption.AllDirectories)
-            .ToList();
-        // 复制其他非md文件
-        List<string> otherFiles = Directory.EnumerateFiles(blogPath, "*", SearchOption.AllDirectories)
-            .Where(f => !f.EndsWith(".md"))
-            .ToList();
-
-        foreach (var file in files)
+        // 如果是文件存在
+        if (File.Exists(dirPath))
         {
-            try
+            string markdown = File.ReadAllText(dirPath);
+            string html = Markdown.ToHtml(markdown, pipeline);
+            string relativePath = dirPath.Replace(dirPath, Path.Combine(Output, dirName)).Replace(".md", ".html");
+
+            var title = GetTitleFromMarkdown(markdown);
+            var toc = GetTOC(markdown) ?? "";
+            html = AddHtmlTags(html, title, toc);
+            string? dir = Path.GetDirectoryName(relativePath);
+
+            File.WriteAllText(relativePath, html, Encoding.UTF8);
+            return;
+        }
+
+        if (Directory.Exists(dirName))
+        {
+            // 读取所有要处理的md文件
+            List<string> files = Directory.EnumerateFiles(dirPath, "*.md", SearchOption.AllDirectories)
+                .ToList();
+            // 复制其他非md文件
+            List<string> otherFiles = Directory.EnumerateFiles(dirPath, "*", SearchOption.AllDirectories)
+                .Where(f => !f.EndsWith(".md"))
+                .ToList();
+
+            foreach (var file in files)
             {
-                string markdown = File.ReadAllText(file);
+                try
+                {
+                    string markdown = File.ReadAllText(file);
+                    string html = Markdown.ToHtml(markdown, pipeline);
+                    string relativePath = file.Replace(dirPath, Path.Combine(Output, dirName)).Replace(".md", ".html");
 
-                string html = Markdown.ToHtml(markdown, pipeline);
-                string relativePath = file.Replace(blogPath, Path.Combine(Output, dirName)).Replace(".md", ".html");
+                    var title = GetTitleFromMarkdown(markdown);
+                    var toc = GetTOC(markdown) ?? "";
+                    html = AddHtmlTags(html, title, toc);
+                    string? dir = Path.GetDirectoryName(relativePath);
 
-                var title = GetTitleFromMarkdown(markdown);
-                var toc = GetTOC(markdown) ?? "";
-                html = AddHtmlTags(html, title, toc);
+                    if (!Directory.Exists(dir))
+                    {
+                        Directory.CreateDirectory(dir!);
+                    }
+
+                    File.WriteAllText(relativePath, html, Encoding.UTF8);
+                }
+                catch (Exception e)
+                {
+                    Command.LogError($"parse markdown error: {file}" + e.Message + e.StackTrace);
+                }
+
+            }
+            Command.LogSuccess("generate  html!");
+            string[] extensions = [".jpg", ".png", ".jpeg", ".gif", ".svg"];
+            foreach (var file in otherFiles)
+            {
+                var extension = Path.GetExtension(file);
+                if (!extensions.Contains(extension)) { continue; }
+
+                string relativePath = file.Replace(ContentPath, Path.Combine(Output, dirName));
                 string? dir = Path.GetDirectoryName(relativePath);
 
                 if (!Directory.Exists(dir))
@@ -117,32 +158,10 @@ public partial class HtmlBuilder
                     Directory.CreateDirectory(dir!);
                 }
 
-                File.WriteAllText(relativePath, html, Encoding.UTF8);
+                File.Copy(file, relativePath, true);
             }
-            catch (Exception e)
-            {
-                Command.LogError($"parse markdown error: {file}" + e.Message + e.StackTrace);
-            }
-
+            Command.LogSuccess("copy other files!");
         }
-        Command.LogSuccess("generate  html!");
-        string[] extensions = [".jpg", ".png", ".jpeg", ".gif", ".svg"];
-        foreach (var file in otherFiles)
-        {
-            var extension = Path.GetExtension(file);
-            if (!extensions.Contains(extension)) { continue; }
-
-            string relativePath = file.Replace(ContentPath, Path.Combine(Output, dirName));
-            string? dir = Path.GetDirectoryName(relativePath);
-
-            if (!Directory.Exists(dir))
-            {
-                Directory.CreateDirectory(dir!);
-            }
-
-            File.Copy(file, relativePath, true);
-        }
-        Command.LogSuccess("copy other files!");
     }
 
     /// <summary>
@@ -222,6 +241,16 @@ public partial class HtmlBuilder
     }
 
     /// <summary>
+    /// 生成aboutme
+    /// </summary>
+    public void BuildAboutMe()
+    {
+        BuildHtmls("about.md");
+        Command.LogSuccess("update about.html");
+
+    }
+
+    /// <summary>
     /// 构建 index.html
     /// </summary>
     public void BuildIndex()
@@ -252,19 +281,19 @@ public partial class HtmlBuilder
     {
         var hasDocs = WebInfo.DocInfos.Count > 0;
         var hasBlog = Directory.Exists(Path.Combine(ContentPath, "blogs"));
-        var hasAbout = File.Exists(Path.Combine(ContentPath, "ABOUTME.md"));
+        var hasAbout = File.Exists(Path.Combine(ContentPath, "about.md"));
         var navigations = new StringBuilder();
         if (hasBlog)
         {
-            navigations.AppendLine("<a href=\"/blogs.html\" class=\"block py-2 text-lg text-neutral-600 hover:text-neutral-800 dark:text-neutral-300 dark:hover:text-neutral-100\">📑 Blogs</a>");
+            navigations.AppendLine("<a href=\"/blogs.html\" class=\"block py-2 text-lg text-neutral-600 hover:text-neutral-800 dark:text-neutral-300 dark:hover:text-neutral-100\">Blogs</a>");
         }
         if (hasDocs)
         {
-            navigations.AppendLine("<a href=\"/docs.html\" class=\"block py-2 text-lg text-neutral-600 hover:text-neutral-800 dark:text-neutral-300 dark:hover:text-neutral-100\">📚 Docs</a>");
+            navigations.AppendLine("<a href=\"/docs.html\" class=\"block py-2 text-lg text-neutral-600 hover:text-neutral-800 dark:text-neutral-300 dark:hover:text-neutral-100\">Docs</a>");
         }
         if (hasAbout)
         {
-            navigations.AppendLine("<a href=\"/ABOUTME.html\" class=\"block py-2 text-lg text-neutral-600 hover:text-neutral-800 dark:text-neutral-300 dark:hover:text-neutral-100\">👨‍💻 About</a>");
+            navigations.AppendLine("<a href=\"/about.html\" target=\"_blank\" class=\"block py-2 text-lg text-neutral-600 hover:text-neutral-800 dark:text-neutral-300 dark:hover:text-neutral-100\">About</a>");
         }
         return navigations.ToString();
     }
