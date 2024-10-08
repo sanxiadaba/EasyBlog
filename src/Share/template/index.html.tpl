@@ -18,12 +18,11 @@
         }
     </style>
 </head>
-
 <body class="dark:bg-neutral-900">
     <div class="text-white py-2 bg-block">
     <div class="container mx-auto flex items-center space-x-4">
       <div class="flex-none">
-        <a href="/" class="text-2xl font-semibold hidden sm:block">EasyBlog</a>
+        <a href="/" class="text-2xl font-semibold hidden sm:block text-blue-600">@{Name}</a>
       </div>
       <div class="flex-grow text-left flex space-x-4 items-center">
          @{navigations}

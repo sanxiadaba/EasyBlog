@@ -15,10 +15,9 @@
 }
 
 .bg-card{
-  @apply bg-white shadow-sm shadow-gray-200 dark:bg-neutral-800/80 dark:shadow-sm dark:shadow-slate-800;
+  @apply bg-white shadow-sm shadow-gray-200 border border-slate-100  dark:bg-neutral-800 dark:shadow-sm dark:shadow-slate-800  dark:border-neutral-700;
 
 }
-
 
 @media (min-width: 640px) {
   .container {
