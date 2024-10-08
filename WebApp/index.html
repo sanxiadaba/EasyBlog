@@ -9,7 +9,6 @@
   <base href="/" />
   <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
   <link rel="stylesheet" href="/css/app.css" />
-  <link rel="stylesheet" href="/css/markdown.css" />
   <link rel="icon" type="image/png" href="/favicon.ico" />
   <script>const baseUrl = '/';</script>
   <script src="//unpkg.com/alpinejs" defer></script>
@@ -29,7 +28,7 @@
       </div>
       <div class="flex-grow text-left flex space-x-4 items-center">
         <a href="/blogs.html" class="block py-2 text text-lg">Blogs</a>
-        <div class="relative " x-data="{isOpen: false}">
+        <div class="relative" x-data="{isOpen: false}">
           <div>
             <button type="button" @click="isOpen = !isOpen" class="flex items-center gap-x-1 text text-lg">
               Docs
@@ -48,17 +47,15 @@
             x-transition:leave-start="transform opacity-100 scale-100"
             x-transition:leave-end="transform opacity-0 scale-95" tabindex="-1">
             <div class="py-1" role="none">
-              <!-- Active: "bg-gray-100 text-gray-900", Not Active: "text-gray-700" -->
-              <a href="#" class="block px-4 py-2 text" role="menuitem" tabindex="-1" id="menu-item-0">Account
-                settings</a>
-              <a href="#" class="block px-4 py-2 text" role="menuitem" tabindex="-1" id="menu-item-1">Support</a>
+              <a href="/docs/example.html" class="block px-4 py-2 text">example</a>
+              <a href="/docs/EasyDoc.html" class="block px-4 py-2 text">EasyDoc</a>
             </div>
           </div>
         </div>
-        <a href="/about.html" target="_blank" class="block py-2 text text-lg">About</a>
+        <a href="/about.html" target="_blank" class="block py-2 text text-lg ">About</a>
+
       </div>
       <div class="flex-none flex items-center">
-
       </div>
     </div>
   </div>
@@ -68,7 +65,7 @@
   </div>
   </div>
 
-  <div class="dark:bg-neutral-800 py-4 fixed bottom-0 w-full bg-gray-200">
+  <div class="py-4 fixed bottom-0 w-full bg-block">
     <div class="container mx-auto text-center">
       <p class="text-neutral-600 dark:text-neutral-300">
         EasyBlog
