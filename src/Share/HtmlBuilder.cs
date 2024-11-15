@@ -15,8 +15,16 @@ public partial class HtmlBuilder
     public string Output { get; init; }
     public string DataPath { get; init; }
     public string BaseUrl { get; set; } = "/";
-
     public WebInfo WebInfo { get; init; }
+
+    /// <summary>
+    /// 博客列表
+    /// </summary>
+    public List<Doc> Blogs { get; set; } = [];
+    /// <summary>
+    /// 文档列表
+    /// </summary>
+    public List<Doc> Docs { get; set; } = [];
 
     private readonly JsonSerializerOptions _jsonSerializerOptions = new()
     {
@@ -57,6 +65,9 @@ public partial class HtmlBuilder
     /// </summary>
     public bool ExtractWebAssets()
     {
+#if DEBUG
+        return true;
+#endif
         var stream = TemplateHelper.GetZipFileStream("web.zip");
         if (stream == null)
         {
@@ -179,6 +190,7 @@ public partial class HtmlBuilder
         }
         var webInfoContent = JsonSerializer.Serialize(WebInfo, _jsonSerializerOptions);
         File.WriteAllText(Path.Combine(DataPath, Command.WebConfigFileName), webInfoContent, Encoding.UTF8);
+
         // 获取git历史信息
         ProcessHelper.RunCommand("git", "fetch --unshallow", out string _);
         BuildBlogs();
@@ -190,13 +202,14 @@ public partial class HtmlBuilder
         // create blogs.json
         var rootCatalog = new Catalog { Name = "Root" };
         TraverseDirectory(Path.Combine(ContentPath, "blogs"), rootCatalog);
+        Blogs = rootCatalog.GetAllDocs();
         string json = JsonSerializer.Serialize(rootCatalog, _jsonSerializerOptions);
 
         string blogDataPath = Path.Combine(DataPath, "blogs.json");
         File.WriteAllText(blogDataPath, json, Encoding.UTF8);
         Command.LogSuccess("update blogs.json!");
         // create sitemap.xml
-        var blogs = rootCatalog.GetAllBlogs();
+        var blogs = rootCatalog.GetAllDocs();
         BuildSitemap(blogs);
     }
 
@@ -255,7 +268,7 @@ public partial class HtmlBuilder
     }
 
     /// <summary>
-    /// TODO:构建 index.html
+    /// 构建 index.html
     /// </summary>
     public void BuildIndexHtml()
     {
@@ -269,8 +282,33 @@ public partial class HtmlBuilder
             var navigations = BuildNavigations();
             var blogHtml = GenBlogListHtml(rootCatalog, WebInfo);
             // TODO: 生成最新的博客列表以及 文档列表(如果有)
+            var latestBlogs = Blogs.Take(4).ToList();
+            var blogSb = new StringBuilder();
+            if (latestBlogs.Count > 0)
+            {
+                blogSb.AppendLine("""
+                    <div class="text-lg my-2 font-medium">
+                      最新博客
+                    </div>
+                    <div class="mt-2 flex gap-4 flex-wrap">
+                    """);
+                foreach (var blog in latestBlogs)
+                {
+                    var date = blog.UpdatedTime.Value.ToLocalTime().ToString("yyyy-MM-dd HH:mm");
+                    blogSb.AppendLine($"""
+                    <div class="blog-card">
+                      <p class="title">{blog.Title}</p>
+                      <p class="sub-title">👨‍💻 {WebInfo.AuthorName} &nbsp;&nbsp;📅 {date}</p>
+                    </div>
+                    """);
+                }
+                blogSb.Append("</div>");
+            }
+
+
             indexHtml = indexHtml.Replace("@{Name}", WebInfo.Name)
                 .Replace("@{navigations}", navigations)
+                .Replace("@{blogs}", blogSb.ToString())
                 .Replace("@{BaseUrl}", BaseUrl);
 
             File.WriteAllText(indexPath, indexHtml, Encoding.UTF8);
@@ -547,7 +585,7 @@ public partial class HtmlBuilder
             return string.Empty;
         }
 
-        var blogs = rootCatalog.GetAllBlogs().OrderByDescending(b => b.PublishTime).ToList() ?? [];
+        var blogs = rootCatalog.GetAllDocs().OrderByDescending(b => b.PublishTime).ToList() ?? [];
 
         foreach (var blog in blogs)
         {
@@ -578,7 +616,7 @@ public partial class HtmlBuilder
     {
         var sb = new StringBuilder();
         var catalogs = data?.Children.ToList() ?? [];
-        var allBlogs = data?.GetAllBlogs().OrderByDescending(b => b.PublishTime).ToList() ?? [];
+        var allBlogs = data?.GetAllDocs().OrderByDescending(b => b.PublishTime).ToList() ?? [];
         var dates = allBlogs!.Select(b => b.PublishTime)
             .OrderByDescending(b => b)
             .DistinctBy(b => b.ToString("yyyy-MM"))

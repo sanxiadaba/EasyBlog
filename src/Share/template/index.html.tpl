@@ -32,9 +32,8 @@
     </div>
     </div>
 
-    <div class="container mx-auto mt-2" id="index-content">
-
-    </div>
+    <div class="container mx-auto">
+    @{blogs}
     </div>
 
     <div class="py-4 fixed bottom-0 w-full bg-block">

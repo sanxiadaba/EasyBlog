@@ -17,14 +17,14 @@ public class Catalog
 
     public Catalog? Parent { get; set; }
 
-    public List<Doc> GetAllBlogs()
+    public List<Doc> GetAllDocs()
     {
         var blogs = new List<Doc>();
 
         blogs.AddRange(Docs);
         foreach (var catalog in Children)
         {
-            blogs.AddRange(catalog.GetAllBlogs());
+            blogs.AddRange(catalog.GetAllDocs());
         }
         return blogs;
     }
