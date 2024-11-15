@@ -10,7 +10,9 @@
   <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
   <link rel="stylesheet" href="/css/app.css" />
   <link rel="icon" type="image/png" href="/favicon.ico" />
-  <script>const baseUrl = '/';</script>
+  <script>
+    const baseUrl = '/';
+  </script>
   <script src="//unpkg.com/alpinejs" defer></script>
   <script src="/js/index.js"></script>
   <style>
@@ -54,23 +56,16 @@
           </div>
         </div>
         <a href="/about.html" target="_blank" class="block py-2 text text-lg ">About</a>
+
       </div>
       <div class="flex-none flex items-center">
       </div>
     </div>
   </div>
-  <div class="container mx-auto mt-2" x-data="model" x-init="getData" x-show="!loading">
-    <!-- 最新博客  -->
-    <div class="text-2xl font-semibold text">最新博客</div>
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
 
-      <template x-for="blog in blogs">
-        <div class="bg-card p-4 rounded-lg">
-          <span x-text="blog.Title"></span>
+  <div class="container mx-auto mt-2" id="index-content">
 
-        </div>
-      </template>
-    </div>
+  </div>
   </div>
 
   <div class="py-4 fixed bottom-0 w-full bg-block">

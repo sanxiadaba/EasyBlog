@@ -75,6 +75,7 @@ public partial class HtmlBuilder
     private void BuildHtmls(string dirName)
     {
         var dirPath = Path.Combine(ContentPath, dirName);
+        Command.LogInfo($"search files in {dirPath}");
         // 配置markdown管道
         MarkdownPipeline pipeline = new MarkdownPipelineBuilder()
             .UseAlertBlocks()
@@ -106,10 +107,11 @@ public partial class HtmlBuilder
             string? dir = Path.GetDirectoryName(relativePath);
 
             File.WriteAllText(relativePath, html, Encoding.UTF8);
+            Command.LogSuccess($"generate html:{relativePath}");
             return;
         }
 
-        if (Directory.Exists(dirName))
+        if (Directory.Exists(dirPath))
         {
             // 读取所有要处理的md文件
             List<string> files = Directory.EnumerateFiles(dirPath, "*.md", SearchOption.AllDirectories)
@@ -138,12 +140,12 @@ public partial class HtmlBuilder
                     }
 
                     File.WriteAllText(relativePath, html, Encoding.UTF8);
+                    Command.LogSuccess($"generate html:{relativePath}");
                 }
                 catch (Exception e)
                 {
                     Command.LogError($"parse markdown error: {file}" + e.Message + e.StackTrace);
                 }
-
             }
             Command.LogSuccess("generate  html!");
             string[] extensions = [".jpg", ".png", ".jpeg", ".gif", ".svg"];

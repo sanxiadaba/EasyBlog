@@ -2,6 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
+html,
+body {
+
+  font-family: Ginto, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", Segoe UI Symbol, "Noto Color Emoji";
+  
+}
+
 .container {
   width: 100%;
 }
@@ -10,12 +17,12 @@
   @apply text-neutral-600 hover:text-neutral-800 dark:text-neutral-300 dark:hover:text-neutral-100;
 }
 
-.bg-block{
+.bg-block {
   @apply bg-slate-50 shadow-sm shadow-gray-200 dark:bg-neutral-900 dark:shadow-sm dark:shadow-gray-800;
 }
 
-.bg-card{
-  @apply bg-white shadow-sm shadow-gray-200 border border-slate-100  dark:bg-neutral-800 dark:shadow-sm dark:shadow-slate-800  dark:border-neutral-700;
+.bg-card {
+  @apply bg-white shadow-sm shadow-gray-200 border border-slate-100 dark:bg-neutral-800 dark:shadow-sm dark:shadow-slate-800 dark:border-neutral-700;
 
 }
 

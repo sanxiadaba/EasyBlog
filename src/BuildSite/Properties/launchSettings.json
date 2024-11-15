@@ -1,8 +1,8 @@
-{
+﻿{
   "profiles": {
     "BuildSite": {
       "commandName": "Project",
-      "commandLineArgs": "",
+      "commandLineArgs": "build ./Content ./WebApp",
       "remoteDebugEnabled": false
     }
   }

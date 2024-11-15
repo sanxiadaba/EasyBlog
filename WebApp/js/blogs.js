@@ -14,16 +14,16 @@ class Index {
     getData() {
         fetch(BaseUrl + 'data/blogs.json')
             .then(res => res.json()).then((data) => {
-            this.allBlogs = this.getAllBlogs(data).sort((a, b) => {
-                return new Date(b.PublishTime).getTime() - new Date(a.PublishTime).getTime();
+                this.allBlogs = this.getAllBlogs(data).sort((a, b) => {
+                    return new Date(b.PublishTime).getTime() - new Date(a.PublishTime).getTime();
+                });
+                this.blogs = this.allBlogs.slice(0, 50);
+                this.catalogs = data.Children;
             });
-            this.blogs = this.allBlogs.slice(0, 50);
-            this.catalogs = data.Children;
-        });
         fetch(BaseUrl + 'data/webinfo.json')
             .then(res => res.json()).then((data) => {
-            this.webInfo = data;
-        });
+                this.webInfo = data;
+            });
     }
     addEvent() {
         const self = this;
@@ -92,7 +92,7 @@ class Index {
     renderBlogs() {
         let blogList = document.getElementById('blogList');
         if (blogList) {
-            const pathName = window.location.pathname;
+            const pathName = window.location.pathname.replace('/blogs.html', '');
             blogList.innerHTML = '';
             this.blogs.forEach(blog => {
                 let blogDiv = document.createElement('div');
