@@ -370,6 +370,10 @@ public partial class HtmlBuilder
         }
     }
 
+    /// <summary>
+    /// 菜单导航
+    /// </summary>
+    /// <returns></returns>
     private string BuildNavigations()
     {
         var hasDocs = WebInfo.DocInfos.Count > 0;
@@ -388,9 +392,9 @@ public partial class HtmlBuilder
                 docLinkHtml += $@"<a href=""/docs/{docName}.html"" class=""block px-4 py-2 text"">{docName}</a>" + Environment.NewLine;
             }
             var docsMenuHtml = $$"""
-                <div class="relative" x-data="{isOpen: false}">
+                <div class="relative dropdown">
                   <div>
-                    <button type="button" @click="isOpen = !isOpen" class="flex items-center gap-x-1 text text-lg">
+                    <button type="button" class="flex items-center gap-x-1 text text-lg">
                       Docs
                       <svg class="-mr-1 h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"
                         data-slot="icon">
@@ -400,12 +404,7 @@ public partial class HtmlBuilder
                       </svg>
                     </button>
                   </div>
-                  <div class="absolute z-10 mt-2 w-56 origin-top-right rounded-md bg-card" x-show="isOpen" x-cloak
-                    @click.away="isOpen = false" x-transition:enter="transition ease-out duration-100"
-                    x-transition:enter-start="transform opacity-0 scale-95"
-                    x-transition:enter-end="transform opacity-100 scale-100" x-transition:leave="transition ease-in duration-75"
-                    x-transition:leave-start="transform opacity-100 scale-100"
-                    x-transition:leave-end="transform opacity-0 scale-95" tabindex="-1">
+                  <div class="absolute z-10 mt-2 w-56 origin-top-right rounded-md bg-card dropdown-content hidden" tabindex="-1">
                     <div class="py-1" role="none">
                       {{docLinkHtml}}
                     </div>

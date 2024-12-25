@@ -10,11 +10,10 @@
     <link rel="stylesheet" href="@{BaseUrl}css/app.css" />
     <link rel="icon" type="image/png" href="@{BaseUrl}favicon.ico" />
     <script>const baseUrl = '@{BaseUrl}';</script>
-    <script src="//unpkg.com/alpinejs" defer></script>
     <script src="@{BaseUrl}js/index.js"></script>
     <style>
-        [x-cloak] {
-          display: none !important;
+        .dropdown:focus-within .dropdown-content {
+          display: block;
         }
     </style>
 </head>

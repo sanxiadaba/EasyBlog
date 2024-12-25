@@ -21,9 +21,9 @@
       </div>
       <div class="flex-grow text-left flex space-x-4">
          <a href="/blogs.html" class="block py-2 text text-lg">Blogs</a>
-<div class="relative" x-data="{isOpen: false}">
+<div class="relative dropdown">
   <div>
-    <button type="button" @click="isOpen = !isOpen" class="flex items-center gap-x-1 text text-lg">
+    <button type="button" class="flex items-center gap-x-1 text text-lg">
       Docs
       <svg class="-mr-1 h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"
         data-slot="icon">
@@ -33,12 +33,7 @@
       </svg>
     </button>
   </div>
-  <div class="absolute z-10 mt-2 w-56 origin-top-right rounded-md bg-card" x-show="isOpen" x-cloak
-    @click.away="isOpen = false" x-transition:enter="transition ease-out duration-100"
-    x-transition:enter-start="transform opacity-0 scale-95"
-    x-transition:enter-end="transform opacity-100 scale-100" x-transition:leave="transition ease-in duration-75"
-    x-transition:leave-start="transform opacity-100 scale-100"
-    x-transition:leave-end="transform opacity-0 scale-95" tabindex="-1">
+  <div class="absolute z-10 mt-2 w-56 origin-top-right rounded-md bg-card dropdown-content hidden" tabindex="-1">
     <div class="py-1" role="none">
       <a href="/docs/example.html" class="block px-4 py-2 text">example</a>
 <a href="/docs/EasyDoc.html" class="block px-4 py-2 text">EasyDoc</a>
