@@ -8,13 +8,23 @@
   <link rel="stylesheet" href="/css/markdown.css">
   <link rel="icon" type="image/png" href="/favicon.ico" />
   <script src="/js/markdown.js"></script>
+  <script src="/js/docs.js"></script>
   <title>EasyDoc</title>
 
 </head>
 
 <body class="container mx-auto px-4 sm:px-6 lg:px-8 dark:bg-neutral-900 pb-4">
   <div class="flex mt-2">
-    <div class="sm:w-3/4 sm:pr-4 w-full">
+    <div class="w-full md:w-1/4 p-4">
+      <select id="languageSelect" class="border border-gray-300 rounded-md p-2">
+        <option value="">Select an option</option>
+        <option value="https://www.example.com">Example</option>
+        <option value="https://www.google.com">Google</option>
+        <option value="https://www.microsoft.com">Microsoft</option>
+      </select>
+    </div>
+
+    <div class="w-full md:w-2/4 p-4">
       <h1 id="easydoc">EasyDoc</h1>
       <p>This tool generates a <code>pure static</code> blog website from a <code>markdown</code> document through
         commands. With the help of <code>GitHub Pages</code>, you can have a personal blog for free in 5 minutes.It has
@@ -89,7 +99,7 @@ ezblog build .\markdown .\WebApp
         you need.</p>
 
     </div>
-    <div class="w-1/4 mt-1 hidden sm:flex">
+    <div class="w-full md:w-1/4 p-4 ">
       <div class="toc-block sticky top-2">
         <p class="text-lg">导航</p>
         <ul class="toc">
