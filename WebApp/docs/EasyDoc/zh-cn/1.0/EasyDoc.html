@@ -10,21 +10,73 @@
   <script src="/js/markdown.js"></script>
   <script src="/js/docs.js"></script>
   <title>EasyDoc</title>
+  <script defer>
+    document.addEventListener('DOMContentLoaded', () => {
+      const toggles = document.querySelectorAll('[data-toggle]');
 
+      toggles.forEach(toggle => {
+        toggle.addEventListener('click', () => {
+          const targetId = toggle.getAttribute('data-toggle');
+          const targetElement = document.getElementById(targetId);
+          if (targetElement) {
+            targetElement.classList.toggle('hidden');
+          }
+        });
+      });
+    });
+  </script>
 </head>
 
 <body class="container mx-auto px-4 sm:px-6 lg:px-8 dark:bg-neutral-900 pb-4">
-  <div class="flex mt-2">
-    <div class="w-full md:w-1/4 p-4">
-      <select id="languageSelect" class="border border-gray-300 rounded-md p-2">
+  <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
+    <div class="hidden md:block lg:col-span-1 px-1">
+      <!-- version -->
+      <select id="languageSelect" class="border border-gray-300 rounded-md p-2 bg-block w-full">
         <option value="">Select an option</option>
         <option value="https://www.example.com">Example</option>
         <option value="https://www.google.com">Google</option>
         <option value="https://www.microsoft.com">Microsoft</option>
       </select>
+      <!-- TODO:search -->
+
+      <!-- tree navigation -->
+
+      <div class="p-4 max-w-xs mx-auto">
+        <ul>
+          <li>
+            <button data-toggle="overview" class="w-full text-left py-2 px-3 bg-gray-800 rounded">Overview</button>
+            <ul id="overview" class="pl-6 hidden">
+              <li><a href="#" class="block py-2 px-3 hover:bg-gray-700 rounded">Get started</a></li>
+              <li><a href="#" class="block py-2 px-3 hover:bg-gray-700 rounded">What's new</a></li>
+            </ul>
+          </li>
+          <li>
+            <button data-toggle="tutorials" class="w-full text-left py-2 px-3 mt-2 bg-gray-800 rounded">Tutorials</button>
+            <ul id="tutorials" class="pl-6 hidden">
+              <li><a href="#" class="block py-2 px-3 hover:bg-gray-700 rounded">Web apps</a></li>
+              <li><a href="#" class="block py-2 px-3 hover:bg-gray-700 rounded">APIs</a></li>
+              <li><a href="#" class="block py-2 px-3 hover:bg-gray-700 rounded">Real-time web apps</a></li>
+              <li><a href="#" class="block py-2 px-3 hover:bg-gray-700 rounded">Remote Procedure Call apps</a></li>
+              <li><a href="#" class="block py-2 px-3 hover:bg-gray-700 rounded">Data access</a></li>
+              <li><a href="#" class="block py-2 px-3 hover:bg-gray-700 rounded">Learn modules</a></li>
+            </ul>
+          </li>
+          <li>
+            <button data-toggle="fundamentals" class="w-full text-left py-2 px-3 mt-2 bg-gray-800 rounded">Fundamentals</button>
+            <ul id="fundamentals" class="pl-6 hidden">
+              <li><a href="#" class="block py-2 px-3 hover:bg-gray-700 rounded">Web apps</a></li>
+              <li><a href="#" class="block py-2 px-3 hover:bg-gray-700 rounded">APIs</a></li>
+            </ul>
+          </li>
+          <li>
+            <button data-toggle="bestPractices" class="w-full text-left py-2 px-3 mt-2 bg-gray-800 rounded">Best practices</button>
+          </li>
+        </ul>
+      </div>
+
     </div>
 
-    <div class="w-full md:w-2/4 p-4">
+    <div class="col-span-1 md:col-span-2 lg:col-span-2">
       <h1 id="easydoc">EasyDoc</h1>
       <p>This tool generates a <code>pure static</code> blog website from a <code>markdown</code> document through
         commands. With the help of <code>GitHub Pages</code>, you can have a personal blog for free in 5 minutes.It has
@@ -99,7 +151,7 @@ ezblog build .\markdown .\WebApp
         you need.</p>
 
     </div>
-    <div class="w-full md:w-1/4 p-4 ">
+    <div class="hidden lg:block lg:col-span-1">
       <div class="toc-block sticky top-2">
         <p class="text-lg">导航</p>
         <ul class="toc">

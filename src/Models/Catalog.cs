@@ -19,13 +19,13 @@ public class Catalog
 
     public List<Doc> GetAllDocs()
     {
-        var blogs = new List<Doc>();
+        var docs = new List<Doc>();
 
-        blogs.AddRange(Docs);
+        docs.AddRange(Docs);
         foreach (var catalog in Children)
         {
-            blogs.AddRange(catalog.GetAllDocs());
+            docs.AddRange(catalog.GetAllDocs());
         }
-        return blogs;
+        return docs;
     }
 }

@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@{Name}</title>
+    <title>@{Title}</title>
     <meta name="description" content="@{Description}" />
     <base href="/" />
     <link rel="stylesheet" href="@{BaseUrl}css/app.css" />
@@ -11,6 +11,7 @@
     <link rel="icon" type="image/png" href="@{BaseUrl}favicon.ico" />
     <script>const baseUrl = '@{BaseUrl}';</script>
     <script src="@{BaseUrl}js/docs.js"></script>
+    @{ExtensionHead}
 </head>
 
 <body class="dark:bg-neutral-900">
@@ -32,22 +33,20 @@
     </div>
     </div>
 
-    <div class="container mx-auto mt-2">
-    <div class="flex">
-        <div class="w-1/4 mt-1 hidden sm:block">
-            @{docToc}
-        </div>
-        <div class="sm:w-3/4 sm:pr-4 w-full">
-            <iframe frameborder="0" id="myIframe" width="100%" height="1000px"></iframe>
-            <script>
-              var iframe = document.getElementById('myIframe');
-              iframe.onload = function () {
-                iframe.style.height = iframe.contentWindow.document.body.scrollHeight + 20 + 'px';
-              };
-            </script>
-        </div>
+<div class="container mx-auto">
+  <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
+    <div class="hidden md:block lg:col-span-1">
+    @{DocTree}
     </div>
+    <div class="col-span-1 md:col-span-2 lg:col-span-2">
+    @{DocContent}
     </div>
+    <div class="hidden lg:block lg:col-span-1">
+    @{TOC}
+    </div>
+  </div>
+</div>
+
 
     <div class="dark:bg-neutral-800 py-4 fixed bottom-0 w-full bg-gray-200">
     <div class="container mx-auto text-center">
