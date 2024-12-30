@@ -12,18 +12,22 @@
     <script>const baseUrl = '@{BaseUrl}';</script>
     <script src="@{BaseUrl}js/docs.js"></script>
     <script src="@{BaseUrl}js/markdown.js"></script>
-
+    <style>
+        .dropdown:focus-within .dropdown-content {
+          display: block;
+        }
+    </style>
     @{ExtensionHead}
 </head>
 
 <body class="dark:bg-neutral-900">
-    <div class="text-white py-2 bg-gray-600 dark:bg-neutral-800">
+    <div class="text-white py-2 bg-block">
     <div class="container mx-auto flex items-center space-x-4">
       <div class="flex-none">
-        <a href="/" class="text-2xl font-semibold hidden sm:block">EasyBlog</a>
+        <a href="/" class="text-2xl font-semibold hidden sm:block">@{Name}</a>
       </div>
-      <div class="flex-grow text-left flex space-x-4">
-         @{navigations}
+      <div class="flex-grow text-left flex space-x-4 items-center">
+         @{NavMenus}
       </div>
       <div class="flex-none flex items-center">
         <input id="searchText" placeholder="搜索文档"
@@ -36,9 +40,10 @@
     </div>
 
 <div class="container mx-auto">
-  <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
+  <div id="docData" class="hidden" data-docName="@{DocName}" data-language="@{Language}" data-version="@{Version}"></div>
+  <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-3 mt-2 pt-2">
     <div class="hidden md:block lg:col-span-1 sticky">
-    @{DocTree}
+    @{LeftNav}
     </div>
     <div class="col-span-1 md:col-span-2 lg:col-span-2">
     @{DocContent}

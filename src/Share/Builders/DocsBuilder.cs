@@ -37,6 +37,9 @@ public class DocsBuilder(WebInfo webInfo, string input, string output) : BaseBui
         TraverseDirectory(docRootPath, docsCatalog);
 
         var tplContent = TemplateHelper.GetTplContent("docs.html");
+        var navMenuTmp = BuildNavigations(ContentPath);
+        tplContent = tplContent.Replace("@{NavMenus}", navMenuTmp)
+            .Replace("@{Name}", WebInfo.Name);
 
         foreach (var docInfo in DocInfos)
         {
@@ -54,13 +57,13 @@ public class DocsBuilder(WebInfo webInfo, string input, string output) : BaseBui
                 var showVersions = docInfo.Versions;
                 var matchVersions = versionDirs.Where(d => showVersions.Contains(Path.GetFileName(d))).ToList();
 
+                var versionSelect = BuildVersionSelect(matchVersions);
+
                 foreach (var version in matchVersions)
                 {
                     var versionPath = Path.Combine(languagePath, version);
                     var versionCatalog = docsCatalog.FindCatalog(versionPath);
-
                     var docTree = BuildTree(versionCatalog);
-                    var versionSelect = BuildVersionSelect(docInfo);
 
                     var docs = versionCatalog.GetAllDocs();
 
@@ -68,6 +71,7 @@ public class DocsBuilder(WebInfo webInfo, string input, string output) : BaseBui
                     {
                         string markdown = File.ReadAllText(doc.Path);
 
+                        var leftNav = versionSelect + docTree;
                         var docContent = BuildDocContent(doc);
                         var title = GetTitleFromMarkdown(markdown);
                         var toc = GetContentTOC(markdown) ?? "";
@@ -76,9 +80,12 @@ public class DocsBuilder(WebInfo webInfo, string input, string output) : BaseBui
                         var htmlContent = tplContent.Replace("@{BaseUrl}", BaseUrl)
                           .Replace("@{ExtensionHead}", extensionScript)
                           .Replace("@{Title}", title)
-                          .Replace("@{DocTree}", docTree)
+                          .Replace("@{LeftNav}", leftNav)
                           .Replace("@{TOC}", toc)
-                          .Replace("@{DocContent}", docContent);
+                          .Replace("@{DocContent}", docContent)
+                          .Replace("@{DocName}", docInfo.Name)
+                          .Replace("@{Language}", language)
+                          .Replace("@{Version}", version);
 
                         var outputFilePath = Path.Combine(outputDocPath, doc.HtmlPath);
 
@@ -127,15 +134,20 @@ public class DocsBuilder(WebInfo webInfo, string input, string output) : BaseBui
     /// </summary>
     /// <param name="docInfo"></param>
     /// <returns></returns>
-    public string BuildVersionSelect(DocInfo docInfo)
+    public string BuildVersionSelect(List<string> versions)
     {
         var sb = new StringBuilder();
         // version select
 
         sb.Append("""
-            <select id="languageSelect" class="border border-gray-300 rounded-md p-2 bg-block w-full">
+            <select id="versionSelect" class="border border-gray-300 rounded-md p-2 bg-block w-full">
 
             """);
+        foreach (var version in versions)
+        {
+            sb.Append($"<option value='{version}'>{version}</option>");
+        }
+
         sb.Append("</select>");
         return sb.ToString();
     }

@@ -13,8 +13,8 @@
     <script src="//unpkg.com/alpinejs" defer></script>
     <script src="@{BaseUrl}js/blogs.js"></script>
     <style>
-        [x-cloak] {
-          display: none !important;
+        .dropdown:focus-within .dropdown-content {
+          display: block;
         }
     </style>
 </head>
