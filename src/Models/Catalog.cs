@@ -11,6 +11,8 @@ public class Catalog
     /// </summary>
     public required string Name { get; set; }
 
+    public required string Path { get; set; }
+
     public ICollection<Catalog> Children { get; set; } = [];
 
     public ICollection<Doc> Docs { get; set; } = [];
@@ -27,5 +29,22 @@ public class Catalog
             docs.AddRange(catalog.GetAllDocs());
         }
         return docs;
+    }
+
+    public Catalog FindCatalog(string path)
+    {
+        if (Path == path)
+        {
+            return this;
+        }
+        foreach (var catalog in Children)
+        {
+            var result = catalog.FindCatalog(path);
+            if (result != null)
+            {
+                return result;
+            }
+        }
+        return null;
     }
 }

@@ -11,6 +11,8 @@
     <link rel="icon" type="image/png" href="@{BaseUrl}favicon.ico" />
     <script>const baseUrl = '@{BaseUrl}';</script>
     <script src="@{BaseUrl}js/docs.js"></script>
+    <script src="@{BaseUrl}js/markdown.js"></script>
+
     @{ExtensionHead}
 </head>
 
@@ -35,7 +37,7 @@
 
 <div class="container mx-auto">
   <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
-    <div class="hidden md:block lg:col-span-1">
+    <div class="hidden md:block lg:col-span-1 sticky">
     @{DocTree}
     </div>
     <div class="col-span-1 md:col-span-2 lg:col-span-2">

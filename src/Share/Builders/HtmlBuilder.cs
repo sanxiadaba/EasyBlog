@@ -47,11 +47,12 @@ public class HtmlBuilder : BaseBuilder
         {
             BuildData();
             BuildHtmls("blogs");
-            BuildHtmls("docs");
             BuildIndexHtml();
             BuildAboutMe();
             BuildBlogHtml();
-            BuildDocHtml();
+
+            var docBuilder = new DocsBuilder(WebInfo, ContentPath, Output);
+            docBuilder.BuildDocs();
         }
         else
         {
@@ -199,8 +200,9 @@ public class HtmlBuilder : BaseBuilder
     public void BuildBlogs()
     {
         // create blogs.json
-        var rootCatalog = new Catalog { Name = "Root" };
-        TraverseDirectory(Path.Combine(ContentPath, "blogs"), rootCatalog);
+        var blogPath = Path.Combine(ContentPath, "blogs");
+        var rootCatalog = new Catalog { Name = "Root", Path = blogPath };
+        TraverseDirectory(blogPath, rootCatalog);
         Blogs = rootCatalog.GetAllDocs();
         string json = JsonSerializer.Serialize(rootCatalog, _jsonSerializerOptions);
 
@@ -240,7 +242,7 @@ public class HtmlBuilder : BaseBuilder
                 foreach (var version in matchVersions)
                 {
                     var versionPath = Path.Combine(languagePath, version);
-                    var versionCatalog = new Catalog { Name = $"{docInfo.Name}" };
+                    var versionCatalog = new Catalog { Name = $"{docInfo.Name}", Path = versionPath };
                     TraverseDirectory(versionPath, versionCatalog);
                     string json = JsonSerializer.Serialize(versionCatalog, _jsonSerializerOptions);
                     string versionDataPath = Path.Combine(DataPath, docInfo.Name);
@@ -419,16 +421,6 @@ public class HtmlBuilder : BaseBuilder
         return navigations.ToString();
     }
 
-    private static string GetFullPath(Catalog catalog)
-    {
-        var path = Uri.EscapeDataString(catalog.Name);
-        if (catalog.Parent != null)
-        {
-            path = GetFullPath(catalog.Parent) + "/" + path;
-        }
-        return path.Replace("Root", "");
-    }
-
     public void EnableBaseUrl()
     {
         BaseUrl = WebInfo?.BaseHref ?? "/";
@@ -447,7 +439,7 @@ public class HtmlBuilder : BaseBuilder
             {
                 var sitemap = new Sitemap
                 {
-                    Loc = domain + BuildBlogPath(blog.Path),
+                    Loc = domain + BuildBlogPath(blog.HtmlPath),
                     Lastmod = blog.PublishTime.ToString("yyyy-MM-dd")
                 };
                 sitemaps.Add(sitemap);
@@ -480,7 +472,7 @@ public class HtmlBuilder : BaseBuilder
                    <div class="w-100 rounded overflow-hidden shadow-lg dark:bg-neutral-800 my-2">
                        <div class="px-6 py-3">
                            <div class="font-bold text-xl mb-2">
-                               <a href = "{BuildBlogPath(blog.Path)}" target="_blank" class="block text-lg py-2 text-neutral-600 hover:text-neutral-800 dark:text-neutral-300 dark:hover:text-neutral-100">📑 {blog.Title}</a>
+                               <a href = "{BuildBlogPath(blog.HtmlPath)}" target="_blank" class="block text-lg py-2 text-neutral-600 hover:text-neutral-800 dark:text-neutral-300 dark:hover:text-neutral-100">📑 {blog.Title}</a>
                            </div>
                            <p class="text-neutral-700 text-base dark:text-neutral-300">
                                👨‍💻 {webInfo?.AuthorName}

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ColorCode.Core.Compilation.Languages;
 using Markdig;
 using Share.MarkdownExtension;
 
@@ -30,7 +31,12 @@ public class DocsBuilder(WebInfo webInfo, string input, string output) : BaseBui
             return;
         }
         var docRootPath = Path.Combine(ContentPath, "docs");
-        var docHtml = TemplateHelper.GetTplContent("docs.html");
+        var outputDocPath = Path.Combine(Output, "docs");
+
+        var docsCatalog = new Catalog { Name = "Root", Path = docRootPath };
+        TraverseDirectory(docRootPath, docsCatalog);
+
+        var tplContent = TemplateHelper.GetTplContent("docs.html");
 
         foreach (var docInfo in DocInfos)
         {
@@ -51,30 +57,38 @@ public class DocsBuilder(WebInfo webInfo, string input, string output) : BaseBui
                 foreach (var version in matchVersions)
                 {
                     var versionPath = Path.Combine(languagePath, version);
-                    var versionCatalog = new Catalog { Name = $"{docInfo.Name}" };
-
-                    TraverseDirectory(versionPath, versionCatalog);
+                    var versionCatalog = docsCatalog.FindCatalog(versionPath);
 
                     var docTree = BuildTree(versionCatalog);
                     var versionSelect = BuildVersionSelect(docInfo);
+
                     var docs = versionCatalog.GetAllDocs();
 
                     foreach (var doc in docs)
                     {
+                        string markdown = File.ReadAllText(doc.Path);
+
                         var docContent = BuildDocContent(doc);
+                        var title = GetTitleFromMarkdown(markdown);
+                        var toc = GetContentTOC(markdown) ?? "";
+                        var extensionScript = GetExtensionScript(docContent);
 
-                        docHtml = docHtml.Replace("{{docTree}}", docTree)
-                            .Replace("{{versionSelect}}", versionSelect)
-                            .Replace("{{docContent}}", docContent);
+                        var htmlContent = tplContent.Replace("@{BaseUrl}", BaseUrl)
+                          .Replace("@{ExtensionHead}", extensionScript)
+                          .Replace("@{Title}", title)
+                          .Replace("@{DocTree}", docTree)
+                          .Replace("@{TOC}", toc)
+                          .Replace("@{DocContent}", docContent);
 
-                        var dirPath = Path.GetDirectoryName(doc.Path);
-                        var dirName = Path.GetFileName(dirPath);
-                        var relativePath = dirPath.Replace(dirPath, Path.Combine(Output, dirName)).Replace(".md", ".html");
-                        if (!Directory.Exists(dirPath))
+                        var outputFilePath = Path.Combine(outputDocPath, doc.HtmlPath);
+
+                        var dirPath = Path.GetDirectoryName(outputFilePath);
+                        if (dirPath != null && !Directory.Exists(dirPath))
                         {
                             Directory.CreateDirectory(dirPath);
                         }
-                        File.WriteAllText(relativePath, docHtml);
+                        File.WriteAllText(outputFilePath, htmlContent);
+                        Command.LogInfo($"generate {outputFilePath}");
                     }
                 }
             }
@@ -101,12 +115,8 @@ public class DocsBuilder(WebInfo webInfo, string input, string output) : BaseBui
             .Build();
 
         string markdown = File.ReadAllText(doc.Path);
-        string html = Markdown.ToHtml(markdown, pipeline);
+        string html = Markdig.Markdown.ToHtml(markdown, pipeline);
         //string relativePath = dirPath.Replace(dirPath, Path.Combine(Output, dirName)).Replace(".md", ".html");
-
-        var title = GetTitleFromMarkdown(markdown);
-        var toc = GetContentTOC(markdown) ?? "";
-        var extensionScript = GetExtensionScript(html);
         return html;
     }
 
@@ -173,12 +183,5 @@ public class DocsBuilder(WebInfo webInfo, string input, string output) : BaseBui
         }
 
         sb.Append("</li>");
-    }
-
-
-
-    public string BuildTOC()
-    {
-        return "";
     }
 }

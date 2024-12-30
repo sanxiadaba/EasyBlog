@@ -1,10 +1,31 @@
 ﻿{
   "Name": "Root",
-  "Children": [],
+  "Path": "D:\\codes\\EasyBlog\\Content\\blogs",
+  "Children": [
+    {
+      "Name": "asp.net core",
+      "Path": "D:\\codes\\EasyBlog\\Content\\blogs\\asp.net core",
+      "Children": [],
+      "Docs": [
+        {
+          "Title": "asp.net core",
+          "HtmlPath": "asp.net core\\asp.net core.html",
+          "Path": "D:\\codes\\EasyBlog\\Content\\blogs\\asp.net core\\asp.net core.md",
+          "FileName": "asp.net core.md",
+          "PublishTime": "2024-12-30T10:43:41.6635929+08:00",
+          "CreatedTime": "2024-12-30T10:43:27.1236033+08:00",
+          "UpdatedTime": "2024-12-30T10:43:41.6635929+08:00",
+          "Catalog": null
+        }
+      ],
+      "Parent": null
+    }
+  ],
   "Docs": [
     {
       "Title": "MyBlog",
-      "Path": "/MyBlog.html",
+      "HtmlPath": "MyBlog.html",
+      "Path": "D:\\codes\\EasyBlog\\Content\\blogs\\MyBlog.md",
       "FileName": "MyBlog.md",
       "PublishTime": "2024-10-06T22:36:40+08:00",
       "CreatedTime": "2024-10-06T22:36:40+08:00",

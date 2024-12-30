@@ -1,6 +1,10 @@
 ﻿using Share;
 
 ShowLogo();
+#if DEBUG
+Test();
+#endif
+
 string? command = args.FirstOrDefault();
 
 switch (command)
@@ -55,4 +59,12 @@ static void ShowLogo()
             """;
 
     Console.WriteLine(logo);
+}
+
+static void Test()
+{
+    Console.WriteLine("Test");
+    var contentPath = Path.Combine(Directory.GetCurrentDirectory(), "Content");
+    var outputPath = Path.Combine(Directory.GetCurrentDirectory(), "WebApp");
+    Command.Build(contentPath, outputPath);
 }

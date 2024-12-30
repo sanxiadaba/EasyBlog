@@ -59,7 +59,15 @@ public partial class BaseBuilder
         return match.Success ? match.Groups[1].Value.Trim() : "";
     }
 
-
+    private static string GetFullPath(Catalog catalog)
+    {
+        var path = catalog.Name;
+        if (catalog.Parent != null)
+        {
+            path = Path.Combine(GetFullPath(catalog.Parent), path);
+        }
+        return path.Replace("Root", "");
+    }
     protected string GetExtensionScript(string content)
     {
         string extensionHead = "";
@@ -111,7 +119,8 @@ public partial class BaseBuilder
             var catalog = new Catalog
             {
                 Name = Path.GetFileName(subDirectoryPath),
-                Parent = parentCatalog
+                Parent = parentCatalog,
+                Path = subDirectoryPath
             };
             parentCatalog.Children.Add(catalog);
             TraverseDirectory(subDirectoryPath, catalog);
@@ -123,20 +132,19 @@ public partial class BaseBuilder
             var fileName = Path.GetFileName(filePath);
             var gitAddTime = GetCreatedTime(filePath);
             var gitUpdateTime = GetUpdatedTime(filePath);
-            var blog = new Doc
+            var doc = new Doc
             {
                 Title = Path.GetFileNameWithoutExtension(filePath),
                 FileName = fileName,
-                Path = string.Empty,
+                Path = filePath,
                 PublishTime = gitUpdateTime ?? gitAddTime ?? fileInfo.LastWriteTime,
                 CreatedTime = gitAddTime ?? fileInfo.CreationTime,
                 UpdatedTime = gitUpdateTime ?? fileInfo.LastWriteTime,
                 Catalog = parentCatalog
             };
 
-            blog.Path = GetFullPath(parentCatalog) + "/" + Uri.EscapeDataString(blog.FileName.Replace(".md", ".html"));
-
-            parentCatalog.Docs.Add(blog);
+            doc.HtmlPath = Path.Combine(GetFullPath(parentCatalog), doc.FileName.Replace(".md", ".html"));
+            parentCatalog.Docs.Add(doc);
         }
     }
 

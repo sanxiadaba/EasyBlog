@@ -2,7 +2,7 @@
   "profiles": {
     "BuildSite": {
       "commandName": "Project",
-      "commandLineArgs": "build ./Content ./WebApp",
+      "workingDirectory": "../../",
       "remoteDebugEnabled": false
     }
   }

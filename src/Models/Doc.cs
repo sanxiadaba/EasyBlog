@@ -10,6 +10,11 @@ public class Doc
     public required string Title { get; set; }
 
     /// <summary>
+    /// html路径
+    /// </summary>
+    public string HtmlPath { get; set; } = string.Empty;
+
+    /// <summary>
     /// 路径
     /// </summary>
     public required string Path { get; set; }

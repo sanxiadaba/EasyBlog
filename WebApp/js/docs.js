@@ -19,6 +19,17 @@ class Docs {
         window.location.href = selectedValue;
       }
     });
+
+    const toggles = document.querySelectorAll('[data-toggle]');
+    toggles.forEach(toggle => {
+      toggle.addEventListener('click', () => {
+        const targetId = toggle.getAttribute('data-toggle');
+        const targetElement = document.getElementById(targetId);
+        if (targetElement) {
+          targetElement.classList.toggle('hidden');
+        }
+      });
+    });
   }
 }
 new Docs();
