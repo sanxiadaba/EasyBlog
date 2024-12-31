@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Collections.Immutable;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace Share.Builders;
@@ -6,6 +7,8 @@ public partial class BaseBuilder
 {
     public WebInfo WebInfo { get; init; }
     public string BaseUrl { get; set; }
+
+    public static Dictionary<string, string> DocMenus { get; set; } = [];
 
     public BaseBuilder(WebInfo webInfo)
     {
@@ -126,6 +129,13 @@ public partial class BaseBuilder
             TraverseDirectory(subDirectoryPath, catalog);
         }
 
+        var orderFile = Path.Combine(directoryPath, ".order");
+        var orderData = new List<string>();
+        if (File.Exists(orderFile))
+        {
+            orderData = File.ReadAllLines(orderFile).ToList();
+        }
+
         foreach (string filePath in Directory.GetFiles(directoryPath, "*.md"))
         {
             var fileInfo = new FileInfo(filePath);
@@ -146,6 +156,21 @@ public partial class BaseBuilder
             doc.HtmlPath = Path.Combine(GetFullPath(parentCatalog), doc.FileName.Replace(".md", ".html"));
             parentCatalog.Docs.Add(doc);
         }
+
+        if (orderData.Count > 0)
+        {
+            var orderedDocs = new List<Doc>();
+            foreach (var order in orderData)
+            {
+                var doc = parentCatalog.Docs.FirstOrDefault(d => d.FileName == order);
+                if (doc != null)
+                {
+                    orderedDocs.Add(doc);
+                }
+            }
+            parentCatalog.Docs = orderedDocs;
+        }
+
     }
     /// <summary>
     /// 菜单导航
@@ -164,9 +189,9 @@ public partial class BaseBuilder
         if (hasDocs)
         {
             var docLinkHtml = "";
-            foreach (var docName in WebInfo.DocInfos.Select(d => d.Name))
+            foreach (var menu in DocMenus)
             {
-                docLinkHtml += $@"<a href=""/docs/{docName}.html"" class=""block px-4 py-2 text"">{docName}</a>" + Environment.NewLine;
+                docLinkHtml += $@"<a href=""/docs/{menu.Value}"" class=""block px-4 py-2 text"">{menu.Key}</a>" + Environment.NewLine;
             }
             var docsMenuHtml = $$"""
                 <div class="relative dropdown">

@@ -37,5 +37,4 @@ public class Doc
     /// </summary>
     public DateTimeOffset? UpdatedTime { get; set; }
     public Catalog? Catalog { get; set; }
-
 }

@@ -57,3 +57,9 @@ public class DocInfo
     /// </summary>
     public string[] Versions { get; set; } = ["1.0"];
 }
+
+public class DocVersion
+{
+    public required string Version { get; set; }
+
+}

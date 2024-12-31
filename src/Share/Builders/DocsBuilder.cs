@@ -18,8 +18,6 @@ public class DocsBuilder(WebInfo webInfo, string input, string output) : BaseBui
 
     public string Output { get; init; } = output;
 
-    public Guid Id { get; set; }
-
     /// <summary>
     /// 构建文档
     /// </summary>
@@ -37,14 +35,13 @@ public class DocsBuilder(WebInfo webInfo, string input, string output) : BaseBui
         TraverseDirectory(docRootPath, docsCatalog);
 
         var tplContent = TemplateHelper.GetTplContent("docs.html");
-        var navMenuTmp = BuildNavigations(ContentPath);
-        tplContent = tplContent.Replace("@{NavMenus}", navMenuTmp)
-            .Replace("@{Name}", WebInfo.Name);
+        tplContent = tplContent.Replace("@{Name}", WebInfo.Name);
+
+        var genFiles = new List<GenFile>();
 
         foreach (var docInfo in DocInfos)
         {
             var docPath = Path.Combine(docRootPath, docInfo.Name);
-
             var languageDirs = Directory.GetDirectories(docPath).Select(d => Path.GetFileName(d));
             var showLanguages = docInfo.Languages;
             var matchLanguages = languageDirs.Where(d => showLanguages.Contains(Path.GetFileName(d))).ToList();
@@ -62,10 +59,24 @@ public class DocsBuilder(WebInfo webInfo, string input, string output) : BaseBui
                 foreach (var version in matchVersions)
                 {
                     var versionPath = Path.Combine(languagePath, version);
+                    // 版本下的目录结构信息
                     var versionCatalog = docsCatalog.FindCatalog(versionPath);
+                    if (versionCatalog == null)
+                    {
+                        continue;
+                    }
                     var docTree = BuildTree(versionCatalog);
 
                     var docs = versionCatalog.GetAllDocs();
+                    var firstDoc = docs.FirstOrDefault();
+                    if (firstDoc != null)
+                    {
+                        if (DocMenus.ContainsKey(docInfo.Name))
+                        {
+                            DocMenus.Remove(docInfo.Name);
+                        }
+                        DocMenus.Add(docInfo.Name, firstDoc.HtmlPath);
+                    }
 
                     foreach (var doc in docs)
                     {
@@ -94,11 +105,23 @@ public class DocsBuilder(WebInfo webInfo, string input, string output) : BaseBui
                         {
                             Directory.CreateDirectory(dirPath);
                         }
-                        File.WriteAllText(outputFilePath, htmlContent);
-                        Command.LogInfo($"generate {outputFilePath}");
+                        genFiles.Add(new GenFile
+                        {
+                            Name = doc.FileName,
+                            Path = outputFilePath,
+                            Content = htmlContent
+                        });
                     }
                 }
             }
+        }
+
+        var navMenuTmp = BuildNavigations(ContentPath);
+        foreach (var genFile in genFiles)
+        {
+            genFile.Content = genFile.Content?.Replace("@{NavMenus}", navMenuTmp);
+            File.WriteAllText(genFile.Path, genFile.Content);
+            Command.LogInfo($"Generate {genFile.Path}");
         }
     }
 
@@ -126,8 +149,6 @@ public class DocsBuilder(WebInfo webInfo, string input, string output) : BaseBui
         //string relativePath = dirPath.Replace(dirPath, Path.Combine(Output, dirName)).Replace(".md", ".html");
         return html;
     }
-
-
 
     /// <summary>
     /// 版本选择控件

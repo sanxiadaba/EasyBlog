@@ -1,0 +1,10 @@
+﻿{
+  "Name": "Ater Blog",
+  "Description": "My Blog - Powered by Ater Blog",
+  "AuthorName": "Ater",
+  "Icon": null,
+  "Logo": null,
+  "BaseHref": "/EasyBlog/",
+  "Domain": null,
+  "DocInfos": []
+}

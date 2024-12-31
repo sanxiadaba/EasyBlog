@@ -19,6 +19,10 @@ public class Catalog
 
     public Catalog? Parent { get; set; }
 
+    /// <summary>
+    /// 获取Catalog所有文档
+    /// </summary>
+    /// <returns></returns>
     public List<Doc> GetAllDocs()
     {
         var docs = new List<Doc>();
@@ -31,7 +35,12 @@ public class Catalog
         return docs;
     }
 
-    public Catalog FindCatalog(string path)
+    /// <summary>
+    /// 查找子Catalog
+    /// </summary>
+    /// <param name="path"></param>
+    /// <returns></returns>
+    public Catalog? FindCatalog(string path)
     {
         if (Path == path)
         {
@@ -47,4 +56,5 @@ public class Catalog
         }
         return null;
     }
+
 }

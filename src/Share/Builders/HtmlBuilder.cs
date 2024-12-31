@@ -47,12 +47,13 @@ public class HtmlBuilder : BaseBuilder
         {
             BuildData();
             BuildHtmls("blogs");
-            BuildIndexHtml();
             BuildAboutMe();
-            BuildBlogHtml();
-
             var docBuilder = new DocsBuilder(WebInfo, ContentPath, Output);
             docBuilder.BuildDocs();
+
+
+            BuildIndexHtml();
+            BuildBlogHtml();
         }
         else
         {
