@@ -12,12 +12,47 @@
     <script>const baseUrl = '/';</script>
     <script src="/js/docs.js"></script>
     <script src="/js/markdown.js"></script>
-    <style>
-        .dropdown:focus-within .dropdown-content {
-          display: block;
-        }
-    </style>
     
+  <style>
+    .tree ul li {
+      list-style-type: none;
+      margin-left: 1.5rem;
+    }
+
+    .root-list>li {
+      margin-left: 0 !important;
+    }
+
+    .tree .caret {
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .tree .nested {
+      display: none;
+    }
+
+    .tree .active {
+      display: block;
+    }
+
+    .tree .caret::before {
+      content: "▶️";
+      display: inline-block;
+      margin-right: 4px;
+    }
+
+    .tree .space::before {
+      content: "\2003";
+      display: inline-block;
+      margin-right: 10px;
+    }
+
+    .tree .caret-down::before {
+      transform: rotate(90deg);
+    }
+  </style>
+
 </head>
 
 <body class="dark:bg-neutral-900">
@@ -66,7 +101,27 @@
   <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-3 mt-2 pt-2">
     <div class="hidden md:block lg:col-span-1 sticky">
     <select id="versionSelect" class="border border-gray-300 rounded-md p-2 bg-block w-full">
-<option value='1.0'>1.0</option><option value='2.0'>2.0</option></select><ul><li><span>1.0</span><ul><li><span>文档.md</span></li><li><span>概述.md</span></li><li><span>问题.md</span></li></ul><ul><li><span>教程</span><ul><li><span>准备.md</span></li><li><span>概念.md</span></li></ul><ul><li><span>框架</span><ul><li><span>模块.md</span></li><li><span>组件.md</span></li></ul></li></ul></li></ul></li></ul>
+
+<option value='1.0'>1.0</option>
+<option value='2.0'>2.0</option>
+</select>
+<div class="tree">
+<ul class="root-list">
+<li><span class="caret">教程</span>
+<ul class="nested">
+<li><span class="caret">框架</span>
+<ul class="nested">
+<li id="e0f32fa44c061772f3e6bd4d782d5a7e" class="space">
+    <a href="example\zh-cn\1.0\教程\框架\模块.html">模块.md</a>
+</li>
+<li id="49aca8845d5e95b4f344a2a41d38e824" class="space">
+    <a href="example\zh-cn\1.0\教程\框架\组件.html">组件.md</a>
+</li>
+</ul>
+</ul>
+</ul>
+</div>
+
     </div>
     <div class="col-span-1 md:col-span-2 lg:col-span-2">
     <h1 id="组件">组件</h1>

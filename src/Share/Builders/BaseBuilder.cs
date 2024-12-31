@@ -1,4 +1,5 @@
 ﻿using System.Collections.Immutable;
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -129,13 +130,6 @@ public partial class BaseBuilder
             TraverseDirectory(subDirectoryPath, catalog);
         }
 
-        var orderFile = Path.Combine(directoryPath, ".order");
-        var orderData = new List<string>();
-        if (File.Exists(orderFile))
-        {
-            orderData = File.ReadAllLines(orderFile).ToList();
-        }
-
         foreach (string filePath in Directory.GetFiles(directoryPath, "*.md"))
         {
             var fileInfo = new FileInfo(filePath);
@@ -156,21 +150,6 @@ public partial class BaseBuilder
             doc.HtmlPath = Path.Combine(GetFullPath(parentCatalog), doc.FileName.Replace(".md", ".html"));
             parentCatalog.Docs.Add(doc);
         }
-
-        if (orderData.Count > 0)
-        {
-            var orderedDocs = new List<Doc>();
-            foreach (var order in orderData)
-            {
-                var doc = parentCatalog.Docs.FirstOrDefault(d => d.FileName == order);
-                if (doc != null)
-                {
-                    orderedDocs.Add(doc);
-                }
-            }
-            parentCatalog.Docs = orderedDocs;
-        }
-
     }
     /// <summary>
     /// 菜单导航
@@ -247,6 +226,23 @@ public partial class BaseBuilder
             ? result
             : null;
     }
+
+
+    public static string ComputeMD5Hash(string input)
+    {
+        using (MD5 md5 = MD5.Create())
+        {
+            byte[] inputBytes = Encoding.UTF8.GetBytes(input);
+            byte[] hashBytes = md5.ComputeHash(inputBytes);
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < hashBytes.Length; i++)
+            {
+                sb.Append(hashBytes[i].ToString("x2"));
+            }
+            return sb.ToString();
+        }
+    }
+
 
     [GeneratedRegex(@"^# (.*)$", RegexOptions.Multiline)]
     private static partial Regex TitleRegex();

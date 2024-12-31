@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using ColorCode.Core.Compilation.Languages;
@@ -160,16 +161,16 @@ public class DocsBuilder(WebInfo webInfo, string input, string output) : BaseBui
         var sb = new StringBuilder();
         // version select
 
-        sb.Append("""
+        sb.AppendLine("""
             <select id="versionSelect" class="border border-gray-300 rounded-md p-2 bg-block w-full">
 
             """);
         foreach (var version in versions)
         {
-            sb.Append($"<option value='{version}'>{version}</option>");
+            sb.AppendLine($"<option value='{version}'>{version}</option>");
         }
 
-        sb.Append("</select>");
+        sb.AppendLine("</select>");
         return sb.ToString();
     }
 
@@ -180,41 +181,101 @@ public class DocsBuilder(WebInfo webInfo, string input, string output) : BaseBui
     public string BuildTree(Catalog rootCatalog)
     {
         if (rootCatalog == null)
+        {
             throw new ArgumentNullException(nameof(rootCatalog));
+        }
 
         var sb = new StringBuilder();
-        sb.Append("<ul>");
+        sb.AppendLine(@"<div class=""tree"">");
+        sb.AppendLine(@"<ul class=""root-list"">");
         GenerateCatalogHtml(rootCatalog, sb);
-        sb.Append("</ul>");
+        sb.AppendLine("</ul>");
+        sb.AppendLine("</div>");
         return sb.ToString();
     }
     private void GenerateCatalogHtml(Catalog catalog, StringBuilder sb)
     {
-        sb.Append("<li>");
-        sb.Append($"<span>{catalog.Name}</span>");
+        var orderFile = Path.Combine(catalog.Path, ".order");
+        string[] orderData = [];
+        if (File.Exists(orderFile))
+        {
+            orderData = File.ReadLines(orderFile).Where(l => !string.IsNullOrWhiteSpace(l))
+                .ToArray();
+        }
+        var nodeItems = new List<TreeNodeItem>();
 
-        // Generate documents list if present
         if (catalog.Docs != null && catalog.Docs.Count > 0)
         {
-            sb.Append("<ul>");
             foreach (var doc in catalog.Docs)
             {
-                sb.Append($"<li><span>{doc.FileName}</span></li>");
+                var nodeItem = new TreeNodeItem
+                {
+                    DisplayName = doc.FileName,
+                    Href = doc.HtmlPath,
+                    Id = ComputeMD5Hash(doc.FileName)
+                };
+                nodeItems.Add(nodeItem);
             }
-            sb.Append("</ul>");
         }
 
-        // Generate children if present
         if (catalog.Children != null && catalog.Children.Count > 0)
         {
-            sb.Append("<ul>");
             foreach (var child in catalog.Children)
             {
-                GenerateCatalogHtml(child, sb);
+                var nodeItem = new TreeNodeItem
+                {
+                    DisplayName = child.Name,
+                    Href = string.Empty,
+                    Id = Encoding.UTF8.GetString(MD5.HashData(Encoding.UTF8.GetBytes(child.Name)))
+                };
+                nodeItems.Add(nodeItem);
             }
-            sb.Append("</ul>");
         }
 
-        sb.Append("</li>");
+        if (orderData.Length > 0)
+        {
+            var orderedItems = new List<TreeNodeItem>();
+            foreach (var order in orderData)
+            {
+                var item = nodeItems.FirstOrDefault(i => i.DisplayName == order);
+                if (item != null)
+                {
+                    orderedItems.Add(item);
+                }
+            }
+            nodeItems = orderedItems;
+        }
+
+        foreach (var item in nodeItems)
+        {
+            if (string.IsNullOrEmpty(item.Href))
+            {
+                sb.AppendLine(@$"<li><span class=""caret"">{item.DisplayName}</span>");
+                sb.AppendLine(@"<ul class=""nested"">");
+
+                var child = catalog.Children.FirstOrDefault(c => c.Name == item.DisplayName);
+                GenerateCatalogHtml(child, sb);
+                sb.AppendLine("</ul>");
+
+            }
+            else
+            {
+                sb.AppendLine($"""
+                    <li id="{item.Id}" class="space">
+                        <a href="{item.Href}">{item.DisplayName}</a>
+                    </li>
+                    """);
+            }
+        }
     }
+}
+
+/// <summary>
+/// 树形结点
+/// </summary>
+public class TreeNodeItem
+{
+    public required string DisplayName { get; set; }
+    public required string Href { get; set; }
+    public required string Id { get; set; }
 }

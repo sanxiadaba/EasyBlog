@@ -12,12 +12,47 @@
     <script>const baseUrl = '/';</script>
     <script src="/js/docs.js"></script>
     <script src="/js/markdown.js"></script>
-    <style>
-        .dropdown:focus-within .dropdown-content {
-          display: block;
-        }
-    </style>
     
+  <style>
+    .tree ul li {
+      list-style-type: none;
+      margin-left: 1.5rem;
+    }
+
+    .root-list>li {
+      margin-left: 0 !important;
+    }
+
+    .tree .caret {
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .tree .nested {
+      display: none;
+    }
+
+    .tree .active {
+      display: block;
+    }
+
+    .tree .caret::before {
+      content: "▶️";
+      display: inline-block;
+      margin-right: 4px;
+    }
+
+    .tree .space::before {
+      content: "\2003";
+      display: inline-block;
+      margin-right: 10px;
+    }
+
+    .tree .caret-down::before {
+      transform: rotate(90deg);
+    }
+  </style>
+
 </head>
 
 <body class="dark:bg-neutral-900">
@@ -66,7 +101,17 @@
   <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-3 mt-2 pt-2">
     <div class="hidden md:block lg:col-span-1 sticky">
     <select id="versionSelect" class="border border-gray-300 rounded-md p-2 bg-block w-full">
-<option value='1.0'>1.0</option></select><ul><li><span>1.0</span><ul><li><span>docs.md</span></li></ul></li></ul>
+
+<option value='1.0'>1.0</option>
+</select>
+<div class="tree">
+<ul class="root-list">
+<li id="b7ce8caf60c980c765406352a9e1ac38" class="space">
+    <a href="example\en-us\1.0\docs.html">docs.md</a>
+</li>
+</ul>
+</div>
+
     </div>
     <div class="col-span-1 md:col-span-2 lg:col-span-2">
     <h1 id="docs">Docs</h1>

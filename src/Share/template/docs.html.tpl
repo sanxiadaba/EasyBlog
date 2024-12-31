@@ -12,12 +12,47 @@
     <script>const baseUrl = '@{BaseUrl}';</script>
     <script src="@{BaseUrl}js/docs.js"></script>
     <script src="@{BaseUrl}js/markdown.js"></script>
-    <style>
-        .dropdown:focus-within .dropdown-content {
-          display: block;
-        }
-    </style>
     @{ExtensionHead}
+  <style>
+    .tree ul li {
+      list-style-type: none;
+      margin-left: 1.5rem;
+    }
+
+    .root-list>li {
+      margin-left: 0 !important;
+    }
+
+    .tree .caret {
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .tree .nested {
+      display: none;
+    }
+
+    .tree .active {
+      display: block;
+    }
+
+    .tree .caret::before {
+      content: "▶️";
+      display: inline-block;
+      margin-right: 4px;
+    }
+
+    .tree .space::before {
+      content: "\2003";
+      display: inline-block;
+      margin-right: 10px;
+    }
+
+    .tree .caret-down::before {
+      transform: rotate(90deg);
+    }
+  </style>
+
 </head>
 
 <body class="dark:bg-neutral-900">

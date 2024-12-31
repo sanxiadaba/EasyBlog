@@ -41,16 +41,13 @@ class Docs {
       }
     });
 
-    const toggles = document.querySelectorAll('[data-toggle]');
-    toggles.forEach(toggle => {
-      toggle.addEventListener('click', () => {
-        const targetId = toggle.getAttribute('data-toggle');
-        const targetElement = document.getElementById(targetId);
-        if (targetElement) {
-          targetElement.classList.toggle('hidden');
-        }
+    var toggler = document.getElementsByClassName("caret");
+    for (var i = 0; i < toggler.length; i++) {
+      toggler[i].addEventListener("click", function () {
+        this.parentElement.querySelector(".nested").classList.toggle("active");
+        this.classList.toggle("caret-down");
       });
-    });
+    }
   }
 
   redirectToVersion(version) {
