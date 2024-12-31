@@ -226,7 +226,7 @@ public class DocsBuilder(WebInfo webInfo, string input, string output) : BaseBui
                 {
                     DisplayName = child.Name,
                     Href = string.Empty,
-                    Id = Encoding.UTF8.GetString(MD5.HashData(Encoding.UTF8.GetBytes(child.Name)))
+                    Id = ComputeMD5Hash(child.Name)
                 };
                 nodeItems.Add(nodeItem);
             }
@@ -237,7 +237,7 @@ public class DocsBuilder(WebInfo webInfo, string input, string output) : BaseBui
             var orderedItems = new List<TreeNodeItem>();
             foreach (var order in orderData)
             {
-                var item = nodeItems.FirstOrDefault(i => i.DisplayName == order);
+                var item = nodeItems.FirstOrDefault(i => Path.GetFileNameWithoutExtension(i.DisplayName) == order);
                 if (item != null)
                 {
                     orderedItems.Add(item);
