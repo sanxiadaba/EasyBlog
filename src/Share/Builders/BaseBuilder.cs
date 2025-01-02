@@ -110,7 +110,7 @@ public partial class BaseBuilder
     {
         string extensionHead = GetExtensionScript(content);
 
-        var tplContent = TemplateHelper.GetTplContent("docContent.html");
+        var tplContent = TemplateHelper.GetTplContent("blogContent.html");
         tplContent = tplContent.Replace("@{Title}", title)
             .Replace("@{BaseUrl}", BaseUrl)
             .Replace("@{ExtensionHead}", extensionHead)

@@ -17,7 +17,7 @@
 </head>
 
 <body class="dark:bg-neutral-900">
-    <div class="text-white py-2 bg-block">
+  <div class="text-white py-2 bg-block">
     <div class="container mx-auto flex items-center space-x-4">
       <div class="flex-none">
         <a href="/" class="text-2xl font-semibold hidden sm:block">EasyBlog</a>
@@ -57,14 +57,14 @@
     </div>
     </div>
 
-<div class="container mx-auto">
-  <div id="docData" class="hidden" data-docName="example" data-language="zh-cn" data-version="2.0"></div>
-  <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-3 mt-2 pt-2">
-    <div class="hidden md:block lg:col-span-1 sticky pe-4">
-    <div>
-      <strong>Version</strong>
-    </div>
-    <select id="versionSelect" class="border border-gray-300 rounded-md p-1 my-2 bg-block w-full">
+    <div class="container mx-auto" style="margin-bottom: 48px;">
+      <div id="docData" class="hidden" data-docName="example" data-language="zh-cn" data-version="2.0"></div>
+      <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-3 mt-2 pt-2">
+        <div class="hidden md:block lg:col-span-1 sticky pe-4 top-0 h-fit">
+        <div>
+          <strong>Version</strong>
+        </div>
+        <select id="versionSelect" class="border border-gray-300 rounded-md p-1 my-2 bg-block w-full">
 
 <option value='1.0'>1.0</option>
 <option value='2.0'>2.0</option>
@@ -80,9 +80,9 @@
 </ul>
 </div>
 
-    </div>
-    <div class="col-span-1 md:col-span-2 lg:col-span-2">
-    <h1 id="dry-cli">Dry CLI</h1>
+        </div>
+        <div class="col-span-1 md:col-span-2 lg:col-span-2">
+        <h1 id="dry-cli">Dry CLI</h1>
 <p><strong><a href="./README_en.md">English</a></strong></p>
 <p><strong>dry</strong> 是一个智能代码辅助工具，主要提供代码生成功能，它可以分析您的实体，智能的帮助您生成相关的数据传输对象、数据库读写操作以及API接口。</p>
 <p>它作为<code>dotnet</code>命令行工具提供，同时支持<code>Web UI</code>操作界面。</p>
@@ -155,9 +155,9 @@ dry studio
 <h2 id="文档">文档</h2>
 <p><a href="https://docs.dusi.dev/zh/ater.dry/%E6%A6%82%E8%BF%B0.html">查看完整文档</a></p>
 
-    </div>
-    <div class="hidden lg:block lg:col-span-1">
-    <div class="toc-block sticky top-2">
+        </div>
+        <div class="hidden lg:block lg:col-span-1">
+        <div class="toc-block sticky top-2">
  <p class="text-lg">导航</p>
 <ul class="toc">
 <li>
@@ -184,18 +184,16 @@ dry studio
 </ul>
 </div>
 
+        </div>
+      </div>
     </div>
-  </div>
-</div>
-
-
-    <div class="dark:bg-neutral-800 py-4 fixed bottom-0 w-full bg-gray-200">
+    <div class="bg-block py-2 bottom-0 w-full fixed">
     <div class="container mx-auto text-center">
-        <p class="text-neutral-600 dark:text-neutral-300">
+        <p class="text-neutral-600 dark:text-neutral-300 mb-0">
         EasyBlog
         <a class="text-blue-600" target="_blank" href="https://github.com/AterDev/EasyBlog">Powered by Ater Blog</a>
         </p>
     </div>
-    </div>
+  </div>
 </body>
 </html>

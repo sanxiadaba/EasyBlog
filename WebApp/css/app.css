@@ -616,6 +616,14 @@ video {
   top: 0.5rem;
 }
 
+.top-1 {
+  top: 0.25rem;
+}
+
+.top-0 {
+  top: 0px;
+}
+
 .z-10 {
   z-index: 10;
 }
@@ -654,6 +662,14 @@ video {
   margin-top: 0.5rem;
 }
 
+.mb-0 {
+  margin-bottom: 0px;
+}
+
+.mb-1 {
+  margin-bottom: 0.25rem;
+}
+
 .block {
   display: block;
 }
@@ -676,6 +692,11 @@ video {
 
 .h-5 {
   height: 1.25rem;
+}
+
+.h-fit {
+  height: -moz-fit-content;
+  height: fit-content;
 }
 
 .w-1\/4 {

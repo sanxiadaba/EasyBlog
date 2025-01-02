@@ -102,7 +102,7 @@ class Index {
                 let blogTitleDiv = document.createElement('div');
                 blogTitleDiv.className = 'font-bold text-xl mb-2';
                 let blogLink = document.createElement('a');
-                blogLink.href = pathName + 'blogs' + blog.Path;
+                blogLink.href = pathName + 'blogs/' + blog.HtmlPath;
                 blogLink.target = '_blank';
                 blogLink.className = 'block text-lg py-2 text-neutral-600 hover:text-neutral-800 dark:text-neutral-300 dark:hover:text-neutral-100';
                 blogLink.innerText = "📑 " + blog.Title;

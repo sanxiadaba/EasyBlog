@@ -114,10 +114,20 @@ public class HtmlBuilder : BaseBuilder
 
             var title = GetTitleFromMarkdown(markdown);
             var toc = GetContentTOC(markdown) ?? "";
-            html = AddHtmlTags(html, title, toc);
+
+            string extensionHead = GetExtensionScript(html);
+
+            var tplContent = TemplateHelper.GetTplContent("blogContent.html");
+            tplContent = tplContent.Replace("@{Title}", title)
+                .Replace("@{BaseUrl}", BaseUrl)
+                .Replace("@{Name}", WebInfo.Name)
+                .Replace("@{ExtensionHead}", extensionHead)
+                .Replace("@{toc}", toc)
+                .Replace("@{content}", html);
+
             string? dir = Path.GetDirectoryName(relativePath);
 
-            File.WriteAllText(relativePath, html, Encoding.UTF8);
+            File.WriteAllText(relativePath, tplContent, Encoding.UTF8);
             Command.LogSuccess($"generate html:{relativePath}");
             return;
         }
@@ -142,7 +152,17 @@ public class HtmlBuilder : BaseBuilder
 
                     var title = GetTitleFromMarkdown(markdown);
                     var toc = GetContentTOC(markdown) ?? "";
-                    html = AddHtmlTags(html, title, toc);
+
+                    string extensionHead = GetExtensionScript(html);
+
+                    var tplContent = TemplateHelper.GetTplContent("blogContent.html");
+                    tplContent = tplContent.Replace("@{Title}", title)
+                        .Replace("@{BaseUrl}", BaseUrl)
+                        .Replace("@{Name}", WebInfo.Name)
+                        .Replace("@{ExtensionHead}", extensionHead)
+                        .Replace("@{toc}", toc)
+                        .Replace("@{content}", html);
+
                     string? dir = Path.GetDirectoryName(relativePath);
 
                     if (!Directory.Exists(dir))
@@ -150,7 +170,7 @@ public class HtmlBuilder : BaseBuilder
                         Directory.CreateDirectory(dir!);
                     }
 
-                    File.WriteAllText(relativePath, html, Encoding.UTF8);
+                    File.WriteAllText(relativePath, tplContent, Encoding.UTF8);
                     Command.LogSuccess($"generate html:{relativePath}");
                 }
                 catch (Exception e)

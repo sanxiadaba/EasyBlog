@@ -17,7 +17,7 @@
 </head>
 
 <body class="dark:bg-neutral-900">
-    <div class="text-white py-2 bg-block">
+  <div class="text-white py-2 bg-block">
     <div class="container mx-auto flex items-center space-x-4">
       <div class="flex-none">
         <a href="/" class="text-2xl font-semibold hidden sm:block">@{Name}</a>
@@ -35,32 +35,30 @@
     </div>
     </div>
 
-<div class="container mx-auto">
-  <div id="docData" class="hidden" data-docName="@{DocName}" data-language="@{Language}" data-version="@{Version}"></div>
-  <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-3 mt-2 pt-2">
-    <div class="hidden md:block lg:col-span-1 sticky pe-4">
-    <div>
-      <strong>Version</strong>
+    <div class="container mx-auto" style="margin-bottom: 48px;">
+      <div id="docData" class="hidden" data-docName="@{DocName}" data-language="@{Language}" data-version="@{Version}"></div>
+      <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-3 mt-2 pt-2">
+        <div class="hidden md:block lg:col-span-1 sticky pe-4 top-0 h-fit">
+        <div>
+          <strong>Version</strong>
+        </div>
+        @{LeftNav}
+        </div>
+        <div class="col-span-1 md:col-span-2 lg:col-span-2">
+        @{DocContent}
+        </div>
+        <div class="hidden lg:block lg:col-span-1">
+        @{TOC}
+        </div>
+      </div>
     </div>
-    @{LeftNav}
-    </div>
-    <div class="col-span-1 md:col-span-2 lg:col-span-2">
-    @{DocContent}
-    </div>
-    <div class="hidden lg:block lg:col-span-1">
-    @{TOC}
-    </div>
-  </div>
-</div>
-
-
-    <div class="dark:bg-neutral-800 py-4 fixed bottom-0 w-full bg-gray-200">
+    <div class="bg-block py-2 bottom-0 w-full fixed">
     <div class="container mx-auto text-center">
-        <p class="text-neutral-600 dark:text-neutral-300">
+        <p class="text-neutral-600 dark:text-neutral-300 mb-0">
         @{Name}
         <a class="text-blue-600" target="_blank" href="https://github.com/AterDev/EasyBlog">Powered by Ater Blog</a>
         </p>
     </div>
-    </div>
+  </div>
 </body>
 </html>

@@ -10,14 +10,22 @@
     <title>@{Title}</title>
     @{ExtensionHead}
 </head>
-<body class="container mx-auto px-4 sm:px-6 lg:px-8 dark:bg-neutral-900 pb-4">
-    <div class="flex mt-2">
+<body class="px-4 sm:px-6 lg:px-8 dark:bg-neutral-900 pb-4">
+    <div class="container mx-auto flex mt-2" style="margin-bottom: 48px;">
         <div class="sm:w-3/4 sm:pr-4 w-full">
         @{content}
         </div>
         <div class="w-1/4 mt-1 hidden sm:flex">
             @{toc}
         </div>
+    </div>
+    <div class="bg-block py-2 bottom-0 w-full fixed">
+      <div class="container mx-auto text-center">
+        <p class="text-neutral-600 dark:text-neutral-300 mb-0">
+        @{Name}
+        <a class="text-blue-600" target="_blank" href="https://github.com/AterDev/EasyBlog">Powered by Ater Blog</a>
+        </p>
+      </div>
     </div>
 </body>
 </html>
