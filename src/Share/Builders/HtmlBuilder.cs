@@ -51,7 +51,6 @@ public class HtmlBuilder : BaseBuilder
             var docBuilder = new DocsBuilder(WebInfo, ContentPath, Output);
             docBuilder.BuildDocs();
 
-
             BuildIndexHtml();
             BuildBlogHtml();
         }
@@ -299,7 +298,9 @@ public class HtmlBuilder : BaseBuilder
                     var date = blog.UpdatedTime.Value.ToLocalTime().ToString("yyyy-MM-dd HH:mm");
                     blogSb.AppendLine($"""
                     <div class="blog-card">
-                      <p class="title">{blog.Title}</p>
+                      <a class="title" href="{BuildBlogPath(blog.HtmlPath)}" target="_blank">
+                        <p>{blog.Title}</p>
+                      </a>
                       <p class="sub-title">👨‍💻 {WebInfo.AuthorName} &nbsp;&nbsp;📅 {date}</p>
                     </div>
                     """);
@@ -468,6 +469,8 @@ public class HtmlBuilder : BaseBuilder
 
     private string BuildBlogPath(string path)
     {
-        return BaseUrl + "blogs" + path;
+        return path.StartsWith('/')
+            ? BaseUrl + "blogs" + path
+            : BaseUrl + "blogs/" + path;
     }
 }

@@ -41,6 +41,10 @@ body {
   }
 }
 
+.dropdown:focus-within .dropdown-content {
+  display: block;
+}
+
 
 @media (min-width: 640px) {
   .container {
