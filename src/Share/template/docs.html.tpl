@@ -36,7 +36,7 @@
     </div>
 
     <div class="container mx-auto" style="margin-bottom: 48px;">
-      <div id="docData" class="hidden" data-docName="@{DocName}" data-language="@{Language}" data-version="@{Version}"></div>
+      <div id="docData" data-id="@{DocId}" class="hidden" data-docName="@{DocName}" data-language="@{Language}" data-version="@{Version}"></div>
       <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-3 mt-2 pt-2">
         <div class="hidden md:block lg:col-span-1 sticky pe-4 top-0 h-fit">
         <div>
@@ -44,7 +44,7 @@
         </div>
         @{LeftNav}
         </div>
-        <div class="col-span-1 md:col-span-2 lg:col-span-2">
+        <div class="col-span-1 md:col-span-2 lg:col-span-2 markdown-content">
         @{DocContent}
         </div>
         <div class="hidden lg:block lg:col-span-1">
@@ -52,7 +52,7 @@
         </div>
       </div>
     </div>
-    <div class="bg-block py-2 bottom-0 w-full fixed">
+    <div class="footer py-2 bottom-0 w-full fixed">
     <div class="container mx-auto text-center">
         <p class="text-neutral-600 dark:text-neutral-300 mb-0">
         @{Name}

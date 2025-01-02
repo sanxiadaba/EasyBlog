@@ -95,6 +95,7 @@ public class DocsBuilder(WebInfo webInfo, string input, string output) : BaseBui
                           .Replace("@{LeftNav}", leftNav)
                           .Replace("@{TOC}", toc)
                           .Replace("@{DocContent}", docContent)
+                          .Replace("@{DocId}", ComputeMD5Hash(doc.HtmlPath))
                           .Replace("@{DocName}", docInfo.Name)
                           .Replace("@{Language}", language)
                           .Replace("@{Version}", version);
@@ -212,7 +213,7 @@ public class DocsBuilder(WebInfo webInfo, string input, string output) : BaseBui
                 {
                     DisplayName = doc.FileName.Replace(".md", ""),
                     Href = doc.HtmlPath,
-                    Id = ComputeMD5Hash(doc.FileName)
+                    Id = ComputeMD5Hash(doc.HtmlPath)
                 };
                 nodeItems.Add(nodeItem);
             }
@@ -226,7 +227,7 @@ public class DocsBuilder(WebInfo webInfo, string input, string output) : BaseBui
                 {
                     DisplayName = child.Name,
                     Href = string.Empty,
-                    Id = ComputeMD5Hash(child.Name)
+                    Id = ComputeMD5Hash(child.Path)
                 };
                 nodeItems.Add(nodeItem);
             }
@@ -262,7 +263,7 @@ public class DocsBuilder(WebInfo webInfo, string input, string output) : BaseBui
             {
                 sb.AppendLine($"""
                     <li id="{item.Id}" class="space">
-                        <a href="/docs/{item.Href}">{item.DisplayName}</a>
+                        <a class="text" href="/docs/{item.Href}">{item.DisplayName}</a>
                     </li>
                     """);
             }

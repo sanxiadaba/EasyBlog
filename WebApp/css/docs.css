@@ -1,6 +1,7 @@
-.tree ul li {
+.tree ul,
+.tree li {
+  list-style: none;
   list-style-type: none;
-  margin-left: 1.5rem;
 }
 
 .root-list>li {
@@ -26,10 +27,9 @@
   margin-right: 4px;
 }
 
-.tree .space::before {
-  content: "\2003";
-  display: inline-block;
-  margin-right: 10px;
+.tree .space {
+  margin-left: 16px;
+  padding-left: 10px;
 }
 
 .tree .caret-down::before {

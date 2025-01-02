@@ -55,13 +55,13 @@
     </div>
     </div>
 
-    <div class="py-2 bottom-0 w-full bg-block fixed">
+  <div class="footer py-2 bottom-0 w-full fixed">
     <div class="container mx-auto text-center">
         <p class="text-neutral-600 dark:text-neutral-300 mb-0">
         @{Name}
         <a class="text-blue-600" target="_blank" href="https://github.com/AterDev/EasyBlog">Powered by Ater Blog</a>
         </p>
     </div>
-    </div>
+  </div>
 </body>
 </html>

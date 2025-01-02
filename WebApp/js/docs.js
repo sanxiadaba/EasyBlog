@@ -2,6 +2,7 @@ class Docs {
   docName = '';
   language = 'en-US';
   version = '1.0';
+  docId = '';
 
   constructor() {
     document.addEventListener('DOMContentLoaded', () => this.init());
@@ -14,6 +15,30 @@ class Docs {
       this.docName = docData.getAttribute('data-docName');
       this.language = docData.getAttribute('data-language');
       this.version = docData.getAttribute('data-version');
+      this.docId = docData.getAttribute('data-id');
+    }
+
+    const docLi = document.getElementById(this.docId);
+    if (docLi) {
+      docLi.classList.add('active');
+      let parent = docLi.parentElement;
+
+      while (parent) {
+        if (parent.tagName === 'UL') {
+          if (parent.classList.contains('root-list')) {
+            break;
+          }
+          parent.classList.add('active');
+        }
+        if (parent.tagName === 'LI') {
+          // 取相同层级的 class= caret
+          const caret = parent.parentElement.querySelector('.caret');
+          if (caret) {
+            caret.classList.add('caret-down');
+          }
+        }
+        parent = parent.parentElement;
+      }
     }
 
     // set selected value for version select
@@ -21,6 +46,8 @@ class Docs {
     if (versionSelect) {
       const options = versionSelect.querySelectorAll('option');
       options.forEach(option => {
+        console.log(option.value, this.version);
+
         if (option.value === this.version) {
           option.selected = true;
         }
@@ -55,7 +82,17 @@ class Docs {
     var path = url.pathname;
     var htmlName = path.split('/').pop();
     url.pathname = `/docs/${this.docName}/${this.language}/${version}/${htmlName}`;
-    window.location.href = url.href;
+
+    // 判断新的url是否返回404
+    fetch(url.href)
+      .then(response => {
+        if (response.status === 404) {
+          alert(`The version ${version} is not available for this document.`);
+          return;
+        } else {
+          window.location.href = url.href;
+        }
+      });
   }
 
 }

@@ -23,6 +23,10 @@ body {
   @apply bg-slate-50 shadow-sm shadow-gray-200 dark:bg-neutral-900 dark:shadow-sm dark:shadow-gray-800;
 }
 
+.footer {
+  @apply bg-slate-50 shadow-sm shadow-gray-700 dark:bg-neutral-900 dark:shadow-sm dark:shadow-gray-300;
+}
+
 .bg-card {
   @apply bg-white shadow-sm shadow-gray-200 border border-slate-100 dark:bg-neutral-800 dark:shadow-sm dark:shadow-slate-800 dark:border-neutral-700;
 
@@ -39,6 +43,10 @@ body {
   &>.sub-title {
     @apply mt-2 text-sm text-neutral-900 dark:text-neutral-100;
   }
+}
+
+li.active {
+  @apply bg-neutral-200 dark:bg-neutral-800 font-bold;
 }
 
 .dropdown:focus-within .dropdown-content {
