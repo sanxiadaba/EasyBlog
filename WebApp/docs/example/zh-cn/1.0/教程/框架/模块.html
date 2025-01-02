@@ -14,6 +14,10 @@
     <script src="/js/markdown.js"></script>
     
   <style>
+   .dropdown:focus-within .dropdown-content {
+        display: block;
+    }
+
     .tree ul li {
       list-style-type: none;
       margin-left: 1.5rem;
@@ -99,26 +103,44 @@
 <div class="container mx-auto">
   <div id="docData" class="hidden" data-docName="example" data-language="zh-cn" data-version="1.0"></div>
   <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-3 mt-2 pt-2">
-    <div class="hidden md:block lg:col-span-1 sticky">
-    <select id="versionSelect" class="border border-gray-300 rounded-md p-2 bg-block w-full">
+    <div class="hidden md:block lg:col-span-1 sticky pe-4">
+    <div>
+      <strong>Version</strong>
+    </div>
+    <select id="versionSelect" class="border border-gray-300 rounded-md p-1 my-2 bg-block w-full">
 
 <option value='1.0'>1.0</option>
 <option value='2.0'>2.0</option>
 </select>
 <div class="tree">
 <ul class="root-list">
+<li id="6806a2ec246f0a4f23b86ce07c347174" class="space">
+    <a href="/docs/example\zh-cn\1.0\概述.html">概述</a>
+</li>
+<li id="165a9ee30979c25f81fb65fb2a1192f8" class="space">
+    <a href="/docs/example\zh-cn\1.0\文档.html">文档</a>
+</li>
 <li><span class="caret">教程</span>
 <ul class="nested">
+<li id="f3280dceea191adc9b2c86e13bcb4759" class="space">
+    <a href="/docs/example\zh-cn\1.0\教程\概念.html">概念</a>
+</li>
 <li><span class="caret">框架</span>
 <ul class="nested">
 <li id="e0f32fa44c061772f3e6bd4d782d5a7e" class="space">
-    <a href="example\zh-cn\1.0\教程\框架\模块.html">模块.md</a>
+    <a href="/docs/example\zh-cn\1.0\教程\框架\模块.html">模块</a>
 </li>
 <li id="49aca8845d5e95b4f344a2a41d38e824" class="space">
-    <a href="example\zh-cn\1.0\教程\框架\组件.html">组件.md</a>
+    <a href="/docs/example\zh-cn\1.0\教程\框架\组件.html">组件</a>
 </li>
 </ul>
+<li id="b950426b5960b1abee8b491eb9ac0d1e" class="space">
+    <a href="/docs/example\zh-cn\1.0\教程\准备.html">准备</a>
+</li>
 </ul>
+<li id="6b2f290a1082f02d734be50bfe1c8032" class="space">
+    <a href="/docs/example\zh-cn\1.0\问题.html">问题</a>
+</li>
 </ul>
 </div>
 

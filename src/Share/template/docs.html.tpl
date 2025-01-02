@@ -14,6 +14,10 @@
     <script src="@{BaseUrl}js/markdown.js"></script>
     @{ExtensionHead}
   <style>
+   .dropdown:focus-within .dropdown-content {
+        display: block;
+    }
+
     .tree ul li {
       list-style-type: none;
       margin-left: 1.5rem;
@@ -77,7 +81,10 @@
 <div class="container mx-auto">
   <div id="docData" class="hidden" data-docName="@{DocName}" data-language="@{Language}" data-version="@{Version}"></div>
   <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-3 mt-2 pt-2">
-    <div class="hidden md:block lg:col-span-1 sticky">
+    <div class="hidden md:block lg:col-span-1 sticky pe-4">
+    <div>
+      <strong>Version</strong>
+    </div>
     @{LeftNav}
     </div>
     <div class="col-span-1 md:col-span-2 lg:col-span-2">

@@ -14,6 +14,10 @@
     <script src="/js/markdown.js"></script>
     
   <style>
+   .dropdown:focus-within .dropdown-content {
+        display: block;
+    }
+
     .tree ul li {
       list-style-type: none;
       margin-left: 1.5rem;
@@ -99,15 +103,18 @@
 <div class="container mx-auto">
   <div id="docData" class="hidden" data-docName="example" data-language="en-us" data-version="1.0"></div>
   <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-3 mt-2 pt-2">
-    <div class="hidden md:block lg:col-span-1 sticky">
-    <select id="versionSelect" class="border border-gray-300 rounded-md p-2 bg-block w-full">
+    <div class="hidden md:block lg:col-span-1 sticky pe-4">
+    <div>
+      <strong>Version</strong>
+    </div>
+    <select id="versionSelect" class="border border-gray-300 rounded-md p-1 my-2 bg-block w-full">
 
 <option value='1.0'>1.0</option>
 </select>
 <div class="tree">
 <ul class="root-list">
 <li id="b7ce8caf60c980c765406352a9e1ac38" class="space">
-    <a href="example\en-us\1.0\docs.html">docs.md</a>
+    <a href="/docs/example\en-us\1.0\docs.html">docs</a>
 </li>
 </ul>
 </div>

@@ -162,7 +162,7 @@ public class DocsBuilder(WebInfo webInfo, string input, string output) : BaseBui
         // version select
 
         sb.AppendLine("""
-            <select id="versionSelect" class="border border-gray-300 rounded-md p-2 bg-block w-full">
+            <select id="versionSelect" class="border border-gray-300 rounded-md p-1 my-2 bg-block w-full">
 
             """);
         foreach (var version in versions)
@@ -210,7 +210,7 @@ public class DocsBuilder(WebInfo webInfo, string input, string output) : BaseBui
             {
                 var nodeItem = new TreeNodeItem
                 {
-                    DisplayName = doc.FileName,
+                    DisplayName = doc.FileName.Replace(".md", ""),
                     Href = doc.HtmlPath,
                     Id = ComputeMD5Hash(doc.FileName)
                 };
@@ -262,7 +262,7 @@ public class DocsBuilder(WebInfo webInfo, string input, string output) : BaseBui
             {
                 sb.AppendLine($"""
                     <li id="{item.Id}" class="space">
-                        <a href="{item.Href}">{item.DisplayName}</a>
+                        <a href="/docs/{item.Href}">{item.DisplayName}</a>
                     </li>
                     """);
             }

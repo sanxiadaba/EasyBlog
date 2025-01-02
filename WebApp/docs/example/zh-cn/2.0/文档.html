@@ -14,6 +14,10 @@
     <script src="/js/markdown.js"></script>
     
   <style>
+   .dropdown:focus-within .dropdown-content {
+        display: block;
+    }
+
     .tree ul li {
       list-style-type: none;
       margin-left: 1.5rem;
@@ -99,8 +103,11 @@
 <div class="container mx-auto">
   <div id="docData" class="hidden" data-docName="example" data-language="zh-cn" data-version="2.0"></div>
   <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-3 mt-2 pt-2">
-    <div class="hidden md:block lg:col-span-1 sticky">
-    <select id="versionSelect" class="border border-gray-300 rounded-md p-2 bg-block w-full">
+    <div class="hidden md:block lg:col-span-1 sticky pe-4">
+    <div>
+      <strong>Version</strong>
+    </div>
+    <select id="versionSelect" class="border border-gray-300 rounded-md p-1 my-2 bg-block w-full">
 
 <option value='1.0'>1.0</option>
 <option value='2.0'>2.0</option>
@@ -108,7 +115,7 @@
 <div class="tree">
 <ul class="root-list">
 <li id="165a9ee30979c25f81fb65fb2a1192f8" class="space">
-    <a href="example\zh-cn\2.0\文档.html">文档.md</a>
+    <a href="/docs/example\zh-cn\2.0\文档.html">文档</a>
 </li>
 </ul>
 </div>
