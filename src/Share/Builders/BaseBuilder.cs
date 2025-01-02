@@ -40,14 +40,15 @@ public partial class BaseBuilder
             foreach (Match match in matches)
             {
                 string headingText = match.Groups[1].Value;
-                string headingId = headingText.ToLower().Replace(" ", "-");
+                string headingId = headingText.Trim().ToLower().Replace(" ", "-")
+                    .Replace("\uFE0F", "");
+
                 // 去除表情符号
                 headingId = Regex.Replace(headingId, @"[\uD800-\uDBFF][\uDC00-\uDFFF]", "");
+
                 tocBuilder.AppendLine($"""
                     <li>
-                      <a href="javascript:void(0);"
-                      onclick="window.location.href=window.location.href.split('#')[0]+'#{headingId}'">{headingText}
-                      </a>
+                      <a href="javascript:void(0);" onclick="window.location.href=window.location.href.split('#')[0]+'#{headingId}'">{headingText}</a>
                     </li>
                     """);
             }
