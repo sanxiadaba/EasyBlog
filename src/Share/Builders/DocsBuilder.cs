@@ -47,6 +47,8 @@ public class DocsBuilder(WebInfo webInfo, string input, string output) : BaseBui
             var showLanguages = docInfo.Languages;
             var matchLanguages = languageDirs.Where(d => showLanguages.Contains(Path.GetFileName(d))).ToList();
 
+            var topActions = BuildTopActions(docInfo);
+
             foreach (var language in matchLanguages)
             {
                 var languagePath = Path.Combine(docPath, language);
@@ -98,6 +100,7 @@ public class DocsBuilder(WebInfo webInfo, string input, string output) : BaseBui
                           .Replace("@{DocId}", ComputeMD5Hash(doc.HtmlPath))
                           .Replace("@{DocName}", docInfo.Name)
                           .Replace("@{Language}", language)
+                          .Replace("@{TopActions}", topActions)
                           .Replace("@{Version}", version);
 
                         var outputFilePath = Path.Combine(outputDocPath, doc.HtmlPath);
@@ -125,6 +128,35 @@ public class DocsBuilder(WebInfo webInfo, string input, string output) : BaseBui
             File.WriteAllText(genFile.Path, genFile.Content);
             Command.LogInfo($"Generate {genFile.Path}");
         }
+    }
+
+    public string BuildTopActions(DocInfo docInfo)
+    {
+        string languages = "";
+        if (docInfo.Languages.Length > 0)
+        {
+            foreach (var lang in docInfo.Languages)
+            {
+                languages += $"""
+                    <a href="javascript:void(0);" onclick="doc.selectLanguage('{lang}')" class="block px-3 py-1 text">{lang}</a>
+                    """;
+            }
+        }
+
+        return $"""
+            <div class="relative dropdown">
+                <div class="relative inline-block cursor-pointer">
+                  <button type="button" class="flex items-center gap-x-1 text text-lg">
+                    🌐
+                  </button>
+                </div>
+                <div class="absolute right-0 mt-1 w-24 rounded-md bg-card dropdown-content hidden z-10 text-center">
+                    <div id="languageSelect" class="py-1" role="none">
+                    {languages}
+                    </div>
+                </div>
+            </div>
+            """;
     }
 
     public string BuildDocContent(Doc doc)

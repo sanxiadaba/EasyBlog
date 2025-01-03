@@ -46,20 +46,11 @@ class Docs {
     if (versionSelect) {
       const options = versionSelect.querySelectorAll('option');
       options.forEach(option => {
-        console.log(option.value, this.version);
-
         if (option.value === this.version) {
           option.selected = true;
         }
       });
     }
-
-    document.getElementById('languageSelect')?.addEventListener('change', function () {
-      const selectedValue = this.value;
-      if (selectedValue) {
-        window.location.href = selectedValue;
-      }
-    });
 
     document.getElementById('versionSelect')?.addEventListener('change', function () {
       const selectedValue = this.value;
@@ -75,6 +66,29 @@ class Docs {
         this.classList.toggle("caret-down");
       });
     }
+  }
+
+  selectLanguage(language) {
+    if (language === this.language) {
+      window.location.reload();
+      return;
+    }
+
+    var url = new URL(window.location.href);
+    var path = url.pathname;
+    var htmlName = path.split('/').pop();
+    url.pathname = `/docs/${this.docName}/${language}/${this.version}/${htmlName}`;
+
+    // 判断新的url是否返回404
+    fetch(url.href)
+      .then(response => {
+        if (response.status === 404) {
+          alert(`The language ${language} is not available for this document.`);
+          return;
+        } else {
+          window.location.href = url.href;
+        }
+      });
   }
 
   redirectToVersion(version) {
@@ -96,7 +110,7 @@ class Docs {
   }
 
 }
-new Docs();
+const doc = new Docs();
 
 
 // interface UrlInfo {

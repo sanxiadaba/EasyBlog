@@ -48,11 +48,18 @@
 
       </div>
       <div class="flex-none flex items-center">
-        <input id="searchText" placeholder="搜索文档"
-          class="px-4 py-2 border border-gray-600 rounded-lg dark:bg-neutral-800 text-black dark:text-white focus:outline-none" />
-        <button id="searchBtn" class="ml-2 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg">
-          搜索
-        </button>
+        <div class="relative dropdown">
+    <div class="relative inline-block cursor-pointer">
+      <button type="button" class="flex items-center gap-x-1 text text-lg">
+        🌐
+      </button>
+    </div>
+    <div class="absolute right-0 mt-1 w-24 rounded-md bg-card dropdown-content hidden z-10 text-center">
+        <div id="languageSelect" class="py-1" role="none">
+        <a href="javascript:void(0);" onclick="doc.selectLanguage('zh-cn')" class="block px-3 py-1 text">zh-cn</a><a href="javascript:void(0);" onclick="doc.selectLanguage('en-us')" class="block px-3 py-1 text">en-us</a>
+        </div>
+    </div>
+</div>
       </div>
     </div>
     </div>
