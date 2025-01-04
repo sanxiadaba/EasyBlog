@@ -32,7 +32,7 @@ class Docs {
         }
         if (parent.tagName === 'LI') {
           // 取相同层级的 class= caret
-          const caret = parent.parentElement.querySelector('.caret');
+          const caret = parent.querySelector('.caret');
           if (caret) {
             caret.classList.add('caret-down');
           }
