@@ -7,27 +7,27 @@ public class Language
     {
         {"Command","命令" },
         {"init",$"初始化配置文件{Command.WebConfigFileName};[path]文件路径."},
-        {"build","生成静态网站;[contentPath]为内容目录,[outputPath]为网站目录路径."},
+        {"build","生成静态网站;[configPath] 为配置文件路径"},
         {"doc","生成文档类静态网站;[configPath]为配置文件(json)"},
-        {"buildRequired","参数[contentPath]与[outputPath]是必需的." },
-        {"initSuccess","初始化配置文件成功!"},
-        {"notExistWebInfo",$"当前目录不存在{Command.WebConfigFileName},将使用默认配置." }
+        {"buildRequired","参数[configPath]是必需的." },
+        {"initSuccess",$"初始化配置文件[{Command.WebConfigFileName}] 成功!"},
+        {"notExistWebInfo",$"未找到配置文件,将使用默认配置." }
     };
     public static Dictionary<string, string> EN { get; set; } = new Dictionary<string, string>
     {
         {"Command","Commands" },
         {"init",$"init config file {Command.WebConfigFileName};[path] is path."},
-        {"build","generate static website;[contentPath] is content path, [outputPath] is output path!"},
+        {"build","generate static website;[configPah] is config file path"},
         {"doc","generate doc site;[configPath] is json config file "},
-        {"buildRequired","params [contentPath] and [outputPath] is Required!" },
-        {"initSuccess","Init config file Success!"},
-        {"notExistWebInfo",$"{Command.WebConfigFileName} not found in current path,will use default config!" }
+        {"buildRequired","params [configPath] is Required!" },
+        {"initSuccess",$"Init config file:[{Command.WebConfigFileName}] success!"},
+        {"notExistWebInfo",$"config file not found, will use default config!" }
     };
-
 
     public static string Get(string key)
     {
         var isCn = CultureInfo.CurrentCulture.Name == "zh-CN";
+
         return isCn ? CN[key] : EN[key];
     }
 }

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
-using ColorCode.Core.Compilation.Languages;
+﻿using System.Text;
 using Markdig;
 using Share.MarkdownExtension;
 
@@ -12,12 +6,9 @@ namespace Share.Builders;
 /// <summary>
 /// 内容构建
 /// </summary>
-public class DocsBuilder(WebInfo webInfo, string input, string output) : BaseBuilder(webInfo)
+public class DocsBuilder(WebInfo webInfo) : BaseBuilder(webInfo)
 {
     public List<DocInfo> DocInfos { get; set; } = webInfo.DocInfos;
-    public string ContentPath { get; init; } = input.EndsWith(Path.DirectorySeparatorChar) ? input[0..^1] : input;
-
-    public string Output { get; init; } = output;
 
     /// <summary>
     /// 构建文档

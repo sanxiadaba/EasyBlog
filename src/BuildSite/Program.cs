@@ -2,7 +2,7 @@
 
 ShowLogo();
 #if DEBUG
-Test();
+Debug();
 #endif
 
 string? command = args.FirstOrDefault();
@@ -14,12 +14,11 @@ switch (command)
         Command.Init(path);
         break;
     case "build":
-        var contentPath = args.Skip(1).FirstOrDefault();
-        var outputPath = args.Skip(2).FirstOrDefault();
+        var configPath = args.Skip(1).FirstOrDefault();
 
-        if (!string.IsNullOrWhiteSpace(contentPath) && !string.IsNullOrWhiteSpace(outputPath))
+        if (!string.IsNullOrWhiteSpace(configPath))
         {
-            Command.Build(contentPath, outputPath);
+            Command.Build(configPath);
         }
         else
         {
@@ -41,13 +40,11 @@ static void ShowHelp()
     build [contentPath] [outputPath]
         {2}
 
-    doc [configPath]
     """;
     Console.Write(helpContent,
         Language.Get("Command"),
         Language.Get("init"),
-        Language.Get("build"),
-        Language.Get("doc")
+        Language.Get("build")
         );
 }
 static void ShowLogo()
@@ -61,10 +58,8 @@ static void ShowLogo()
     Console.WriteLine(logo);
 }
 
-static void Test()
+static void Debug()
 {
-    Console.WriteLine("Test");
-    var contentPath = Path.Combine(Directory.GetCurrentDirectory(), "Content");
-    var outputPath = Path.Combine(Directory.GetCurrentDirectory(), "WebApp");
-    Command.Build(contentPath, outputPath);
+    var configPath = Path.Combine(Directory.GetCurrentDirectory(), "webinfo.json");
+    Command.Build(configPath);
 }

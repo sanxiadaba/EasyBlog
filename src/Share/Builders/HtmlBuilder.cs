@@ -2,20 +2,14 @@
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json.Serialization;
-using System.Text.RegularExpressions;
 using System.Text.Unicode;
 using Markdig;
-using Share.Builders;
 using Share.MarkdownExtension;
 
-namespace Share;
+namespace Share.Builders;
 
 public class HtmlBuilder : BaseBuilder
 {
-    public string ContentPath { get; init; }
-    public string Output { get; init; }
-    public string DataPath { get; init; }
-
     /// <summary>
     /// 博客列表
     /// </summary>
@@ -32,12 +26,8 @@ public class HtmlBuilder : BaseBuilder
         WriteIndented = true
     };
 
-    public HtmlBuilder(string input, string output, WebInfo webinfo) : base(webinfo)
+    public HtmlBuilder(WebInfo webinfo) : base(webinfo)
     {
-        Output = output;
-        ContentPath = input.EndsWith(Path.DirectorySeparatorChar) ? input[0..^1] : input;
-        DataPath = Path.Combine(Output, BlogConst.DataPath);
-        WebInfo = webinfo;
     }
 
     public void BuildWebSite()
@@ -48,9 +38,6 @@ public class HtmlBuilder : BaseBuilder
             BuildData();
             BuildHtmls("blogs");
             BuildAboutMe();
-            var docBuilder = new DocsBuilder(WebInfo, ContentPath, Output);
-            docBuilder.BuildDocs();
-
             BuildIndexHtml();
             BuildBlogHtml();
         }
@@ -366,10 +353,7 @@ public class HtmlBuilder : BaseBuilder
         }
     }
 
-    public void EnableBaseUrl()
-    {
-        BaseUrl = WebInfo?.BaseHref ?? "/";
-    }
+
 
     /// <summary>
     /// 创建sitemap.xml

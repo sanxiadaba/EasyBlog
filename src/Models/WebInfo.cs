@@ -17,6 +17,15 @@ public class WebInfo
     /// 作者名称
     /// </summary>
     public string AuthorName { get; set; } = "Ater";
+    /// <summary>
+    /// 内容目录
+    /// </summary>
+    public string ContetPath { get; set; } = "./Content";
+
+    /// <summary>
+    /// 输出目录
+    /// </summary>
+    public string OutputPath { get; set; } = "./WebSite";
 
     /// <summary>
     /// 图标

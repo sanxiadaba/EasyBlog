@@ -3,6 +3,8 @@
   "Description": "\uD83D\uDDFDto be a human",
   "AuthorName": "NilTor",
   "BaseHref": "/",
+  "ContentPath": "./Content",
+  "OutputPath": "./WebApp",
   "Domain": "https://aterdev.github.io/",
   "DocInfos": [
     {

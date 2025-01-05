@@ -1,8 +1,9 @@
-﻿namespace Share;
+﻿using Share.Builders;
+
+namespace Share;
 public class Command
 {
-    public const string WebConfigFileName = "webinfo.json";
-    public const string DocConfigFileName = "docConfig.json";
+    public static string WebConfigFileName = "webinfo.json";
     public readonly static JsonSerializerOptions JsonSerializerOptions = new()
     {
         WriteIndented = true
@@ -46,9 +47,9 @@ public class Command
         }
     }
 
-    public static void Build(string contentPath, string outputPath)
+    public static void Build(string configPath)
     {
-        var webInfoPath = Path.Combine(WebConfigFileName);
+        var webInfoPath = Path.Combine(configPath);
         var webInfo = new WebInfo();
         if (File.Exists(webInfoPath))
         {
@@ -60,8 +61,13 @@ public class Command
             LogInfo(Language.Get("notExistWebInfo"));
         }
 
-        var builder = new HtmlBuilder(contentPath, outputPath, webInfo!);
+        var builder = new HtmlBuilder(webInfo!);
         builder.BuildWebSite();
+
+        var docBuilder = new DocsBuilder(webInfo!);
+        docBuilder.EnableBaseUrl();
+        docBuilder.BuildDocs();
+
     }
 
     public static void LogInfo(string msg)

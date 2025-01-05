@@ -1,3 +1,3 @@
 # 生成内容
-dotnet run --project ./src/BuildSite build ./Content ./WebApp
+dotnet run --project ./src/BuildSite build ./webinfo.json
 

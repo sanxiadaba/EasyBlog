@@ -1,5 +1,4 @@
-﻿using System.Collections.Immutable;
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -7,6 +6,11 @@ namespace Share.Builders;
 public partial class BaseBuilder
 {
     public WebInfo WebInfo { get; init; }
+
+    public string ContentPath { get; init; }
+    public string Output { get; init; }
+    public string DataPath { get; init; }
+
     public string BaseUrl { get; set; }
 
     public static Dictionary<string, string> DocMenus { get; set; } = [];
@@ -15,6 +19,18 @@ public partial class BaseBuilder
     {
         WebInfo = webInfo;
         BaseUrl = "/";
+        ContentPath = webInfo.ContetPath.EndsWith(Path.DirectorySeparatorChar) ? webInfo.ContetPath[0..^1] : webInfo.ContetPath;
+        Output = webInfo.OutputPath;
+        DataPath = Path.Combine(Output, BlogConst.DataPath);
+    }
+
+    public void EnableBaseUrl()
+    {
+        BaseUrl = WebInfo?.BaseHref ?? "/";
+        if (!BaseUrl.EndsWith('/'))
+        {
+            BaseUrl += "/";
+        }
     }
 
     /// <summary>
@@ -104,19 +120,6 @@ public partial class BaseBuilder
                 """;
         }
         return extensionHead;
-    }
-
-    protected string AddHtmlTags(string content, string title = "", string toc = "")
-    {
-        string extensionHead = GetExtensionScript(content);
-
-        var tplContent = TemplateHelper.GetTplContent("blogContent.html");
-        tplContent = tplContent.Replace("@{Title}", title)
-            .Replace("@{BaseUrl}", BaseUrl)
-            .Replace("@{ExtensionHead}", extensionHead)
-            .Replace("@{toc}", toc)
-            .Replace("@{content}", content);
-        return tplContent;
     }
 
     /// <summary>
@@ -243,7 +246,7 @@ public partial class BaseBuilder
         {
             byte[] inputBytes = Encoding.UTF8.GetBytes(input);
             byte[] hashBytes = md5.ComputeHash(inputBytes);
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
             for (int i = 0; i < hashBytes.Length; i++)
             {
                 sb.Append(hashBytes[i].ToString("x2"));
