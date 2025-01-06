@@ -16,6 +16,17 @@
       "Versions": [
         "2.0"
       ]
+    },
+    {
+      "Name": "Ater.Dry",
+      "Languages": [
+        "zh-cn",
+        "en-us"
+      ],
+      "Versions": [
+        "8.0",
+        "9.0"
+      ]
     }
   ]
 }
