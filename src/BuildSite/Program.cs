@@ -1,4 +1,8 @@
-﻿using Share;
+﻿using System.Text;
+using Share;
+
+Console.OutputEncoding = Encoding.UTF8;
+Console.InputEncoding = Encoding.UTF8;
 
 ShowLogo();
 #if DEBUG

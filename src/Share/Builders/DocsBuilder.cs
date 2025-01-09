@@ -38,6 +38,7 @@ public class DocsBuilder(WebInfo webInfo) : BaseBuilder(webInfo)
             var showLanguages = docInfo.Languages;
             var matchLanguages = languageDirs.Where(d => showLanguages.Contains(Path.GetFileName(d))).ToList();
 
+            Command.LogInfo($"match languages: {string.Join(",",matchLanguages)} ");
             var topActions = BuildTopActions(docInfo);
 
             foreach (var language in matchLanguages)
@@ -48,15 +49,19 @@ public class DocsBuilder(WebInfo webInfo) : BaseBuilder(webInfo)
                 var showVersions = docInfo.Versions;
                 var matchVersions = versionDirs.Where(d => showVersions.Contains(Path.GetFileName(d))).ToList();
 
+                Command.LogInfo($"match versions: {string.Join(",", matchVersions)} ");
+
                 var versionSelect = BuildVersionSelect(matchVersions);
 
                 foreach (var version in matchVersions)
                 {
                     var versionPath = Path.Combine(languagePath, version);
+                    Command.LogInfo($"Build Docs: {docInfo.Name}/{language}/{versionPath}");
                     // 版本下的目录结构信息
                     var versionCatalog = docsCatalog.FindCatalog(versionPath);
                     if (versionCatalog == null)
                     {
+                        Command.LogWarning($"Not found catalog: {versionPath}");
                         continue;
                     }
                     var docTree = BuildTree(versionCatalog);

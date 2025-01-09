@@ -1,4 +1,5 @@
-﻿using Share.Builders;
+﻿using System.Text;
+using Share.Builders;
 
 namespace Share;
 public class Command
@@ -66,6 +67,7 @@ public class Command
         docBuilder.BuildDocs();
 
         var builder = new HtmlBuilder(webInfo!);
+        builder.EnableBaseUrl();
         builder.BuildWebSite();
     }
 
