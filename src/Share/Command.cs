@@ -61,13 +61,12 @@ public class Command
             LogInfo(Language.Get("notExistWebInfo"));
         }
 
-        var builder = new HtmlBuilder(webInfo!);
-        builder.BuildWebSite();
-
         var docBuilder = new DocsBuilder(webInfo!);
         docBuilder.EnableBaseUrl();
         docBuilder.BuildDocs();
 
+        var builder = new HtmlBuilder(webInfo!);
+        builder.BuildWebSite();
     }
 
     public static void LogInfo(string msg)

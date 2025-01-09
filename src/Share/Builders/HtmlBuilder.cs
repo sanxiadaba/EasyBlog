@@ -232,6 +232,7 @@ public class HtmlBuilder : BaseBuilder
             if (!Directory.Exists(docPath))
             {
                 Command.LogWarning($"{docPath} not exist! skip it.");
+                continue;
             }
             // 匹配语言
             var languageDirs = Directory.GetDirectories(docPath).Select(d => Path.GetFileName(d));
@@ -314,7 +315,6 @@ public class HtmlBuilder : BaseBuilder
                 }
                 blogSb.Append("</div>");
             }
-
 
             indexHtml = indexHtml.Replace("@{Name}", WebInfo.Name)
                 .Replace("@{navigations}", navigations)
