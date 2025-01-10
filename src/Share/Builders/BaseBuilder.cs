@@ -132,14 +132,18 @@ public partial class BaseBuilder
         foreach (string subDirectoryPath in Directory.GetDirectories(directoryPath))
         {
             var existMd = Directory.GetFiles(subDirectoryPath, "*.md").Length > 0;
-            var catalog = new Catalog
+            var existDir = Directory.GetDirectories(subDirectoryPath).Length > 0;
+            if (existMd || existDir)
             {
-                Name = Path.GetFileName(subDirectoryPath),
-                Parent = parentCatalog,
-                Path = subDirectoryPath
-            };
-            parentCatalog.Children.Add(catalog);
-            TraverseDirectory(subDirectoryPath, catalog);
+                var catalog = new Catalog
+                {
+                    Name = Path.GetFileName(subDirectoryPath),
+                    Parent = parentCatalog,
+                    Path = subDirectoryPath
+                };
+                parentCatalog.Children.Add(catalog);
+                TraverseDirectory(subDirectoryPath, catalog);
+            }
         }
 
         foreach (string filePath in Directory.GetFiles(directoryPath, "*.md"))

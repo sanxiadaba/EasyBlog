@@ -34,11 +34,17 @@ public class DocsBuilder(WebInfo webInfo) : BaseBuilder(webInfo)
         foreach (var docInfo in DocInfos)
         {
             var docPath = Path.Combine(docRootPath, docInfo.Name);
+            if(!Directory.Exists(docPath))
+            {
+                Command.LogWarning($"Not found doc: {docPath}");
+                continue;
+            }
+
             var languageDirs = Directory.GetDirectories(docPath).Select(d => Path.GetFileName(d));
             var showLanguages = docInfo.Languages;
             var matchLanguages = languageDirs.Where(d => showLanguages.Contains(Path.GetFileName(d))).ToList();
 
-            Command.LogInfo($"match languages: {string.Join(",",matchLanguages)} ");
+            Command.LogInfo($"match languages: {string.Join(",", matchLanguages)} ");
             var topActions = BuildTopActions(docInfo);
 
             foreach (var language in matchLanguages)
@@ -76,7 +82,7 @@ public class DocsBuilder(WebInfo webInfo) : BaseBuilder(webInfo)
                         }
                         DocMenus.Add(docInfo.Name, firstDoc.HtmlPath);
                     }
-
+                    // md 文件
                     foreach (var doc in docs)
                     {
                         string markdown = File.ReadAllText(doc.Path);
@@ -113,6 +119,28 @@ public class DocsBuilder(WebInfo webInfo) : BaseBuilder(webInfo)
                             Content = htmlContent
                         });
                     }
+
+                    // 其他资源文件
+                    List<string> otherFiles = Directory.EnumerateFiles(versionPath, "*", SearchOption.AllDirectories)
+                        .Where(f => !f.EndsWith(".md"))
+                        .ToList();
+                    string[] extensions = [".jpg", ".png", ".jpeg", ".gif", ".svg"];
+                    foreach (var file in otherFiles)
+                    {
+                        var extension = Path.GetExtension(file);
+                        if (!extensions.Contains(extension)) { continue; }
+
+                        string relativePath = file.Replace(ContentPath, Path.Combine(Output, versionPath));
+                        string? dir = Path.GetDirectoryName(relativePath);
+
+                        if (!Directory.Exists(dir))
+                        {
+                            Directory.CreateDirectory(dir!);
+                        }
+
+                        File.Copy(file, relativePath, true);
+                    }
+                    Command.LogSuccess("Copied other files!");
                 }
             }
         }
@@ -222,6 +250,7 @@ public class DocsBuilder(WebInfo webInfo) : BaseBuilder(webInfo)
         sb.AppendLine("</div>");
         return sb.ToString();
     }
+
     private void GenerateCatalogHtml(Catalog catalog, StringBuilder sb)
     {
         var orderFile = Path.Combine(catalog.Path, ".order");

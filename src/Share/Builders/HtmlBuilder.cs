@@ -165,7 +165,7 @@ public class HtmlBuilder : BaseBuilder
                     Command.LogError($"parse markdown error: {file}" + e.Message + e.StackTrace);
                 }
             }
-            Command.LogSuccess("generate  html!");
+            Command.LogSuccess("generate html!");
             string[] extensions = [".jpg", ".png", ".jpeg", ".gif", ".svg"];
             foreach (var file in otherFiles)
             {
@@ -201,7 +201,7 @@ public class HtmlBuilder : BaseBuilder
         // 获取git历史信息
         ProcessHelper.RunCommand("git", "fetch --unshallow", out string _);
         BuildBlogs();
-        BuildDocs();
+        BuildDocsData();
     }
 
     public void BuildBlogs()
@@ -221,7 +221,7 @@ public class HtmlBuilder : BaseBuilder
         BuildSitemap(blogs);
     }
 
-    public void BuildDocs()
+    public void BuildDocsData()
     {
         var docInfos = WebInfo.DocInfos;
         var docRootPath = Path.Combine(ContentPath, "docs");
